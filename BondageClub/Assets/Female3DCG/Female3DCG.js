@@ -2237,7 +2237,13 @@ var AssetFemale3DCG = [
 			},
 			{ Name: "DuctTape", Fetish: ["Tape"], Value: 50, Difficulty: -2, Time: 10, RemoveTime: 5, BuyGroup: "DuctTape", Audio: "DuctTape", Prerequisite: "GagFlat", Hide: ["Mouth"], Effect: ["BlockMouth", "GagVeryLight"], AllowEffect: ["BlockMouth", "GagVeryLight", "GagLight", "GagEasy", "GagNormal", "GagMedium"], AllowType: ["Small", "Crossed", "Full", "Double", "Cover"], Extended: true },
 			{ Name: "PacifierGag", Fetish: ["ABDL", "Leather"], Value: 10, Difficulty: -50, Time: 2, Random: false, BuyGroup: "PacifierGag", Hide: ["Mouth"], Effect: ["BlockMouth", "GagVeryLight"], Block: ["ItemMouth2", "ItemMouth3"], ExpressionTrigger: [{ Name: "Light", Group: "Blush", Timer: 5 }, { Name: "Closed", Group: "Eyes", Timer: 5 }] },
-			{ Name: "HarnessPacifierGag", Fetish: ["ABDL", "Leather"], Value: 50, Difficulty: 2, Time: 20, Random: false, AllowLock: true, BuyGroup: "HarnessPacifierGag", Prerequisite: "GagUnique", Hide: ["Mouth"], Effect: ["BlockMouth", "GagLight"], ExpressionTrigger: [{ Name: "Light", Group: "Blush", Timer: 5 }, { Name: "Closed", Group: "Eyes", Timer: 5 }] },
+			{ 
+				Name: "HarnessPacifierGag", Fetish: ["ABDL", "Leather"], Value: 50, Difficulty: 2, Time: 20, Random: false, AllowLock: true, BuyGroup: "HarnessPacifierGag", Prerequisite: "GagUnique", Hide: ["Mouth"], Effect: ["BlockMouth", "GagLight"], ExpressionTrigger: [{ Name: "Light", Group: "Blush", Timer: 5 }, { Name: "Closed", Group: "Eyes", Timer: 5 }],
+				Layer: [
+					{ Name: "Strap", ColorGroup: "Straps" },
+					{ Name: "Paci", ColorGroup: "Paci" }
+				]
+			},
 			{
 				Name: "DusterGag", Fetish: ["Leather"], Priority: 42, Value: -1, Difficulty: 4, Time: 20, Random: false, AllowLock: true, BuyGroup: "DusterGag", Hide: ["Mouth"], Effect: ["BlockMouth", "GagEasy"], Block: ["ItemMouth2", "ItemMouth3"],
 				Layer: [
@@ -3110,7 +3116,32 @@ var AssetFemale3DCG = [
 			{ Name: "SmallWoodenBoxOpenHead", Value: 40, Difficulty: -2, SelfBondage: 3, Time: 15, RemoveTime: 10, AllowLock: true, Audio: "LockLarge", Prerequisite: ["NotSuspended", "NotHogtied", "NotMounted", "NotKneelingSpread", "NoFeetSpreader", "CanKneel", "NotYoked"], Hide: ["Wings"], SetPose: ["Kneel"], Effect: ["ForceKneel", "Prone", "Freeze", "Block"], AllowBlock: ["ItemHands"], Alpha: [{ Masks: [[1, 220, 70, 999], [420, 220, 80, 999]] }], Block: ["ItemArms", "ItemBreast", "ItemButt", "ItemFeet", "ItemLegs", "ItemMisc", "ItemNipples", "ItemNipplesPiercings", "ItemPelvis", "ItemTorso", "ItemVulva", "ItemVulvaPiercings", "ItemBoots", "ItemHands"], RemoveAtLogin: true },
 			{ Name: "WoodenStocks", Value: 150, Difficulty: 50, SelfBondage: 4, Time: 10, AllowLock: true, Prerequisite: ["NotKneeling", "AllFours", "NotSuspended", "NotHogtied", "NotKneelingSpread", "NoItemArms", "LegsOpen"], SetPose: ["Yoked", "LegsOpen"], Effect: ["Prone", "Freeze", "Block", "Mounted"], Block: ["ItemArms", "ItemFeet", "ItemLegs", "ItemBoots"], RemoveAtLogin: true },
 			{ Name: "Vacbed", Fetish: ["Latex"], ParentGroup: "BodyUpper", Value: 200, Difficulty: 50, Priority:36, SelfBondage: 3, Time: 10, Prerequisite: ["NotKneeling", "AllFours", "NotSuspended", "NotHogtied", "NotKneelingSpread", "NoItemArms", "LegsOpen", "NoItemHands", "NoItemLegs", "NoHorse", "NoItemFeet"], Hide: ["ItemNeckAccessories", "ItemNeckRestraints", "HairBack"], SetPose: ["Yoked", "BaseLower"], Effect: ["Prone", "Freeze", "Block", "Mounted"], Alpha: [{ Masks: [[1, 1, 70, 999], [420, 1, 80, 999]] }], Block: ["ItemArms", "ItemBoots", "ItemBreast", "ItemButt", "ItemFeet", "ItemHands", "ItemLegs", "ItemMisc", "ItemAddon", "ItemNeck", "ItemNeckAccessories", "ItemNeckRestraints", "ItemNipples", "ItemNipplesPiercings", "ItemPelvis", "ItemTorso", "ItemVulva", "ItemVulvaPiercings"], RemoveAtLogin: true },
-			{ Name: "Crib", Fetish: ["ABDL"], Priority: 1, Value: 100, Difficulty: 0, SelfBondage: 1, Time: 15, RemoveTime: 10, IsRestraint: true, AllowLock: true, Left: -30, Top: -235, Effect: ["Freeze"], RemoveAtLogin: true, Prerequisite: ["AllFours", "NotSuspended", "NotHogtied", "NoFeetSpreader"], Extended: true, AllowType: ["Open", "Closed", "Stuffed"], SetPose: ["BaseLower"] },
+			{ 
+				Name: "Crib", 
+				Fetish: ["ABDL"], 
+				Priority: 1, 
+				Value: 100, 
+				Difficulty: 0,
+				SelfBondage: 1, 
+				Time: 15, 
+				RemoveTime: 10, 
+				IsRestraint: false, 
+				AllowLock: true, 
+				Left: -30, Top: -235, 
+				RemoveAtLogin: true, 
+				Prerequisite: ["AllFours", "NotSuspended", "NotHogtied", "NoFeetSpreader"], 
+				Extended: true, 
+				AllowType: ["g0f0", "g0f1", "g1f0", "g1f1"], 
+				Layer: [
+					{ Name: "GateOpen", CopyLayerColor: "Frame", ParentGroup: null, AllowTypes: ["g0p0", "g0p1"], HasType: false },
+					{ Name: "GateClosed", CopyLayerColor: "Frame", ParentGroup: null, AllowTypes: ["g1p0", "g1p1"] },
+					{ Name: "Frame", ColorGroup: "Frame", ParentGroup: null, AllowTypes: ["g0p0", "g0p1", "g1p0", "g1p1"], HasType: false },
+					{ Name: "Mattress", ColorGroup: "Mattress", ParentGroup: null, AllowTypes: ["g0p0", "g0p1", "g1p0", "g1p1"], HasType: false },
+					{ Name: "PillowMain", ColorGroup: "Pillow", ParentGroup: null, AllowTypes: ["g0p0", "g0p1", "g1p0", "g1p1"], HasType: false },
+					{ Name: "PillowTrim", ColorGroup: "PillowTrim", ParentGroup: null, AllowTypes: ["g0p0", "g0p1", "g1p0", "g1p1"], HasType: false },
+					{ Name: "Plushies", ColorGroup: "Plushies", Priority: 53, ParentGroup: null, AllowTypes: ["g0p1", "g1p1"], HasType: null}
+				],
+				SetPose: ["BaseLower"] },
 			{
 				Name: "Bed", Value: 100, Priority: 1, Difficulty: -20, SelfBondage: 0, Time: 5, RemoveTime: 5, BuyGroup: "Bed", RemoveItemOnRemove: [{ Name: "Covers", Group: "ItemAddon" }], 
 				Effect: ["Freeze", "Mounted"],
