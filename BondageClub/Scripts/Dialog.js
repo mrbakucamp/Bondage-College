@@ -25,6 +25,7 @@ var DialogAllowBlush = false;
 var DialogAllowEyebrows = false;
 var DialogAllowFluids = false;
 var DialogFacialExpressions = [];
+var DialogFacialExpressionsSelected = -1;
 var DialogActivePoses = [];
 var DialogItemPermissionMode = false;
 var DialogExtendedMessage = "";
@@ -36,6 +37,7 @@ var DialogSortOrderUsable = 3;
 var DialogSortOrderUnusable = 4;
 var DialogSortOrderBlocked = 5;
 var DialogSelfMenuSelected = null;
+var DialogLeaveDueToItem = false; // This allows dynamic items to call DialogLeave() without crashing the game
 /**
  * The list of menu types available when clicking on yourself
  * @const
@@ -167,7 +169,7 @@ function DialogLogQuery(LogType, LogGroup) { return LogQuery(LogType, LogGroup);
  * @param {string} Allow - The flag to set. Either "TRUE" or "FALSE"
  * @returns {boolean} - The boolean version of the flag
  */
-function DialogAllowItem(Allow) { return CurrentCharacter.AllowItem = (Allow.toUpperCase().trim() == "TRUE"); } // 
+function DialogAllowItem(Allow) { return CurrentCharacter.AllowItem = (Allow.toUpperCase().trim() == "TRUE"); }
 
 /**
  * Returns the value of the AllowItem flag of a given character
@@ -339,6 +341,15 @@ function DialogCanUnlock(C, Item) {
 }
 
 /**
+ * Some specific screens like the movie studio cannot allow the player to use items on herself, return FALSE if it's the case
+ * @returns {boolean} - Returns TRUE if we allow using items
+ */
+function DialogAllowItemScreenException() {
+	if ((CurrentScreen == "MovieStudio") && (MovieStudioCurrentMovie != "")) return false;
+	return true;
+}
+
+/**
  * Returns the current character dialog intro
  * @returns {string} - The name of the current dialog, if such a dialog exists, any empty string otherwise
  */
@@ -361,10 +372,12 @@ function DialogLeave() {
 	DialogActivityMode = false;
 	DialogItemToLock = null;
 	Player.FocusGroup = null;
-	CurrentCharacter.FocusGroup = null;
+	if (CurrentCharacter)
+		CurrentCharacter.FocusGroup = null;
 	DialogInventory = null;
 	CurrentCharacter = null;
 	DialogSelfMenuSelected = null;
+	DialogFacialExpressionsSelected = -1;
 }
 
 /**
@@ -424,7 +437,8 @@ function DialogLeaveItemMenu() {
 	DialogEndExpression();
 	DialogItemToLock = null;
 	Player.FocusGroup = null;
-	CurrentCharacter.FocusGroup = null;
+	if (CurrentCharacter)
+		CurrentCharacter.FocusGroup = null;
 	DialogInventory = null;
 	DialogProgress = -1;
 	DialogColor = null;
@@ -486,7 +500,7 @@ function DialogInventoryAdd(C, NewInv, NewInvWorn, SortOrder) {
 			return;
 
 	// If the item is blocked, we show it at the end of the list
-	if (InventoryIsPermissionBlocked(C, NewInv.Asset.Name, NewInv.Asset.Group.Name) || !InventoryCheckLimitedPermission(C, NewInv))
+	if (InventoryIsPermissionBlocked(C, NewInv.Asset.DynamicName(Player), NewInv.Asset.DynamicGroupName) || !InventoryCheckLimitedPermission(C, NewInv))
 		SortOrder = DialogSortOrderBlocked;
 
 	// Creates a new dialog inventory item
@@ -569,13 +583,19 @@ function DialogMenuButtonBuild(C) {
 		// Pushes all valid main buttons, based on if the player is restrained, has a blocked group, has the key, etc.
 		var IsItemLocked = InventoryItemHasEffect(Item, "Lock", true);
 		var IsGroupBlocked = InventoryGroupIsBlocked(C);
-		if ((DialogInventory.length > 12) && ((Player.CanInteract() && !IsGroupBlocked) || DialogItemPermissionMode)) DialogMenuButton.push("Next");
+		if ((DialogInventory != null) && (DialogInventory.length > 12) && ((Player.CanInteract() && !IsGroupBlocked) || DialogItemPermissionMode)) DialogMenuButton.push("Next");
 		if (C.FocusGroup.Name == "ItemMouth" || C.FocusGroup.Name == "ItemMouth2" || C.FocusGroup.Name == "ItemMouth3") DialogMenuButton.push("ChangeLayersMouth");
 		if (IsItemLocked && DialogCanUnlock(C, Item) && InventoryAllow(C, Item.Asset.Prerequisite) && !IsGroupBlocked && ((C.ID != 0) || Player.CanInteract())) { DialogMenuButton.push("Unlock"); DialogMenuButton.push("Remove"); }
 		if ((Item != null) && (C.ID == 0) && !Player.CanInteract() && InventoryItemHasEffect(Item, "Block", true) && IsItemLocked && DialogCanUnlock(C, Item) && (DialogMenuButton.indexOf("Unlock") < 0) && InventoryAllow(C, Item.Asset.Prerequisite) && !IsGroupBlocked) DialogMenuButton.push("Unlock");
 		if ((Item != null) && (C.ID == 0) && (!Player.CanInteract() || (IsItemLocked && !DialogCanUnlock(C, Item))) && (DialogMenuButton.indexOf("Unlock") < 0) && InventoryAllow(C, Item.Asset.Prerequisite) && !IsGroupBlocked) DialogMenuButton.push("Struggle");
 		if (IsItemLocked && !Player.IsBlind() && (Item.Property != null) && (Item.Property.LockedBy != null) && (Item.Property.LockedBy != "")) DialogMenuButton.push("InspectLock");
-		if ((Item != null) && Item.Asset.AllowLock && !IsItemLocked && Player.CanInteract() && InventoryAllow(C, Item.Asset.Prerequisite) && !IsGroupBlocked) DialogMenuButton.push("Lock");
+		if ((Item != null) && !IsItemLocked && Player.CanInteract() && InventoryAllow(C, Item.Asset.Prerequisite) && !IsGroupBlocked) {
+			if (Item.Asset.AllowLock && (!Item.Property || (Item.Property && Item.Property.AllowLock !== false))) {
+				if (!Item.Asset.AllowLockType || Item.Asset.AllowLockType.includes(Item.Property.Type)) {
+					DialogMenuButton.push("Lock");
+				}
+			}
+		}
 		if ((Item != null) && !IsItemLocked && !InventoryItemHasEffect(Item, "Mounted", true) && !InventoryItemHasEffect(Item, "Enclose", true) && Player.CanInteract() && InventoryAllow(C, Item.Asset.Prerequisite) && !IsGroupBlocked) DialogMenuButton.push("Remove");
 		if ((Item != null) && !IsItemLocked && InventoryItemHasEffect(Item, "Mounted", true) && Player.CanInteract() && InventoryAllow(C, Item.Asset.Prerequisite) && !IsGroupBlocked) DialogMenuButton.push("Dismount");
 		if ((Item != null) && !IsItemLocked && InventoryItemHasEffect(Item, "Enclose", true) && Player.CanInteract() && InventoryAllow(C, Item.Asset.Prerequisite) && !IsGroupBlocked) DialogMenuButton.push("Escape");
@@ -590,11 +610,11 @@ function DialogMenuButtonBuild(C) {
 					ActivityDialogBuild(C);
 					if (DialogActivity.length > 0) DialogMenuButton.push("Activity");
 				}
-		
-		// Item permission enter/exit
+
+		// Item permission enter/exit, cannot be done in Extreme mode
 		if (C.ID == 0) {
 			if (DialogItemPermissionMode) DialogMenuButton.push("DialogNormalMode");
-			else DialogMenuButton.push("DialogPermissionMode");
+			else if (Player.GetDifficulty() <= 2) DialogMenuButton.push("DialogPermissionMode");
 		}
 
 	}
@@ -654,7 +674,7 @@ function DialogInventoryBuild(C, Offset) {
 			// Second, we add everything from the victim inventory
 			for (let A = 0; A < C.Inventory.length; A++)
 				if ((C.Inventory[A].Asset != null) && (C.Inventory[A].Asset.Group.Name == C.FocusGroup.Name) && C.Inventory[A].Asset.DynamicAllowInventoryAdd(C)) {
-					var DialogSortOrder = C.Inventory[A].Asset.DialogSortOverride != null ? C.Inventory[A].Asset.DialogSortOverride : (InventoryAllow(C, C.Inventory[A].Asset.Prerequisite, false)) ? DialogSortOrderUsable : DialogSortOrderUnusable;
+					var DialogSortOrder = C.Inventory[A].Asset.DialogSortOverride != null ? C.Inventory[A].Asset.DialogSortOverride : (InventoryAllow(C, C.Inventory[A].Asset.Prerequisite, false) && InventoryChatRoomAllow(C.Inventory[A].Asset.Category)) ? DialogSortOrderUsable : DialogSortOrderUnusable;
 					DialogInventoryAdd(C, C.Inventory[A], false, DialogSortOrder);
 				}
 
@@ -662,14 +682,14 @@ function DialogInventoryBuild(C, Offset) {
 			if (C.ID != 0)
 				for (let A = 0; A < Player.Inventory.length; A++)
 					if ((Player.Inventory[A].Asset != null) && (Player.Inventory[A].Asset.Group.Name == C.FocusGroup.Name) && Player.Inventory[A].Asset.DynamicAllowInventoryAdd(C)) {
-						var DialogSortOrder = Player.Inventory[A].Asset.DialogSortOverride != null ? Player.Inventory[A].Asset.DialogSortOverride : (InventoryAllow(C, Player.Inventory[A].Asset.Prerequisite, false)) ? DialogSortOrderUsable : DialogSortOrderUnusable;
+						var DialogSortOrder = Player.Inventory[A].Asset.DialogSortOverride != null ? Player.Inventory[A].Asset.DialogSortOverride : (InventoryAllow(C, Player.Inventory[A].Asset.Prerequisite, false) && InventoryChatRoomAllow(Player.Inventory[A].Asset.Category)) ? DialogSortOrderUsable : DialogSortOrderUnusable;
 						DialogInventoryAdd(C, Player.Inventory[A], false, DialogSortOrder);
 					}
 
 			// Fourth, we add all free items (especially useful for clothes)
 			for (let A = 0; A < Asset.length; A++)
 				if ((Asset[A].Group.Name == C.FocusGroup.Name) && (Asset[A].Value == 0) && Asset[A].DynamicAllowInventoryAdd(C)) {
-					var DialogSortOrder = Asset[A].DialogSortOverride != null ? Asset[A].DialogSortOverride : (InventoryAllow(C, Asset[A].Prerequisite, false)) ? DialogSortOrderUsable : DialogSortOrderUnusable;
+					var DialogSortOrder = Asset[A].DialogSortOverride != null ? Asset[A].DialogSortOverride : (InventoryAllow(C, Asset[A].Prerequisite, false) && InventoryChatRoomAllow(Asset[A].Category)) ? DialogSortOrderUsable : DialogSortOrderUnusable;
 					DialogInventoryAdd(C, { Asset: Asset[A] }, false, DialogSortOrder);
 				}
 
@@ -689,18 +709,16 @@ function DialogInventoryBuild(C, Offset) {
 function DialogFacialExpressionsBuild() {
 	DialogFacialExpressions = [];
 	for (let I = 0; I < Player.Appearance.length; I++) {
-		var PA = Player.Appearance[I];
-		var ExpressionList = PA.Asset.Group.AllowExpression;
+		const PA = Player.Appearance[I];
+		let ExpressionList = PA.Asset.Group.AllowExpression;
 		if (!ExpressionList || !ExpressionList.length || PA.Asset.Group.Name == "Eyes2") continue;
-		var Item = {};
+		ExpressionList = ExpressionList.slice();
+		if (!ExpressionList.includes(null)) ExpressionList.unshift(null);
+		const Item = {};
 		Item.Appearance = PA;
 		Item.Group = PA.Asset.Group.Name;
 		Item.CurrentExpression = (PA.Property == null) ? null : PA.Property.Expression;
-		var Index = ExpressionList.indexOf(Item.CurrentExpression);
-		Item.MenuExpression1 = (Index < 0) ? ExpressionList[ExpressionList.length - 1] : (Index == 0) ? null : ExpressionList[Index - 1];
-		Item.MenuExpression2 = Item.CurrentExpression;
-		Item.MenuExpression3 = (Index < 0) ? ExpressionList[0] : (Index == ExpressionList.length - 1) ? null : ExpressionList[Index + 1];
-		Item.MenuExpression4 = (Index < 0) ? ExpressionList[1] : (Index == ExpressionList.length - 2) ? null : ExpressionList[(Index + 2) % (ExpressionList.length + 1)];
+		Item.ExpressionList = ExpressionList;
 		DialogFacialExpressions.push(Item);
 	}
 	// Temporary (?) solution to make the facial elements appear in a more logical order, as their alphabetical order currently happens to match up
@@ -845,6 +863,12 @@ function DialogProgressStart(C, PrevItem, NextItem) {
 	// The progress bar will not go down if the player can use her hands for a new item, or if she has the key for the locked item
 	if ((DialogProgressAuto < 0) && Player.CanInteract() && (PrevItem == null)) DialogProgressAuto = 0;
 	if ((DialogProgressAuto < 0) && Player.CanInteract() && (PrevItem != null) && (!InventoryItemHasEffect(PrevItem, "Lock", true) || DialogCanUnlock(C, PrevItem)) && !InventoryItemHasEffect(PrevItem, "Mounted", true)) DialogProgressAuto = 0;
+
+	// Roleplay users can bypass the struggle mini-game with a toggle
+	if ((CurrentScreen == "ChatRoom") && ((DialogProgressChallenge <= 6) || (DialogProgressAuto >= 0)) && Player.RestrictionSettings.BypassStruggle) {
+		DialogProgressAuto = 1;
+		DialogProgressSkill = 5;
+	}
 
 	// If there's no current blushing, we update the blushing state while struggling
 	DialogAllowBlush = ((DialogProgressAuto < 0) && (DialogProgressChallenge > 0) && (C.ID == 0) && ((InventoryGet(C, "Blush") == null) || (InventoryGet(C, "Blush").Property == null) || (InventoryGet(C, "Blush").Property.Expression == null)));
@@ -1106,7 +1130,8 @@ function DialogItemClick(ClickItem) {
 
 	// If we must apply a lock to an item (can trigger a daily job)
 	if (DialogItemToLock != null) {
-		if ((CurrentItem != null) && CurrentItem.Asset.AllowLock) {
+		if ((CurrentItem != null) &&
+			(CurrentItem.Asset.AllowLock || CurrentItem.Asset.Extended && CurrentItem.Property && CurrentItem.Property.AllowLock !== false && CurrentItem.Asset.AllowLockType.indexOf(CurrentItem.Property.Type)>=0)) {
 			InventoryLock(C, CurrentItem, ClickItem, Player.MemberNumber);
 			IntroductionJobProgress("DomLock", ClickItem.Asset.Name, true);
 			DialogItemToLock = null;
@@ -1119,7 +1144,7 @@ function DialogItemClick(ClickItem) {
 	// Cannot change item if the previous one is locked or blocked by another group
 	if ((CurrentItem == null) || !InventoryItemHasEffect(CurrentItem, "Lock", true)) {
 		if (!InventoryGroupIsBlocked(C))
-			if (InventoryAllow(C, ClickItem.Asset.Prerequisite))
+			if (InventoryAllow(C, ClickItem.Asset.Prerequisite) && InventoryChatRoomAllow(ClickItem.Asset.Category))
 				if ((CurrentItem == null) || (CurrentItem.Asset.Name != ClickItem.Asset.Name)) {
 					if (ClickItem.Asset.Wear) {
 
@@ -1180,7 +1205,7 @@ function DialogClick() {
 	}
 
 	// If the user clicked on the interaction character or herself, we check to build the item menu
-	if ((CurrentCharacter.AllowItem || (MouseX < 500)) && (MouseX >= 0) && (MouseX <= 1000) && (MouseY >= 0) && (MouseY < 1000) && ((CurrentCharacter.ID != 0) || (MouseX > 500)) && (DialogIntro() != "")) {
+	if ((CurrentCharacter.AllowItem || (MouseX < 500)) && (MouseX >= 0) && (MouseX <= 1000) && (MouseY >= 0) && (MouseY < 1000) && ((CurrentCharacter.ID != 0) || (MouseX > 500)) && (DialogIntro() != "") && DialogAllowItemScreenException()) {
 		DialogLeaveItemMenu();
 		DialogLeaveFocusItem();
 		var C = (MouseX < 500) ? Player : CurrentCharacter;
@@ -1315,7 +1340,7 @@ function DialogClick() {
 
 	// If the user clicked in the facial expression menu
 	if ((CurrentCharacter != null) && (CurrentCharacter.ID == 0) && (MouseX >= 0) && (MouseX <= 500)) {
-		if (MouseIn(410, 50, 90, 90) && DialogSelfMenuOptions.filter(SMO => SMO.IsAvailable()).length > 1) DialogFindNextSubMenu();
+		if (MouseIn(390, 50, 90, 90) && DialogSelfMenuOptions.filter(SMO => SMO.IsAvailable()).length > 1) DialogFindNextSubMenu();
 		if (!DialogSelfMenuSelected)
 			DialogClickExpressionMenu();
 		else
@@ -1641,7 +1666,7 @@ function DialogDraw() {
 
 	// Draw the menu for facial expressions if the player clicked on herself
 	if (CurrentCharacter.ID == 0) {
-		if (DialogSelfMenuOptions.filter(SMO => SMO.IsAvailable()).length > 1) DrawButton(410, 50, 90, 90, "", "White", "Icons/Next.png", DialogFind(Player, "NextPage"));
+		if (DialogSelfMenuOptions.filter(SMO => SMO.IsAvailable()).length > 1) DrawButton(390, 50, 90, 90, "", "White", "Icons/Next.png", DialogFind(Player, "NextPage"));
 		if (!DialogSelfMenuSelected)
 			DialogDrawExpressionMenu();
 		else
@@ -1697,34 +1722,24 @@ function DialogDrawExpressionMenu() {
 
 	// Draw the expression groups
 	DrawText(DialogFind(Player, "FacialExpression"), 165, 25, "White", "Black");
-	DrawButton(220, 50, 90, 90, "", "White", "Icons/WinkL.png", DialogFind(Player, "WinkLFacialExpressions"));
-	DrawButton(120, 50, 90, 90, "", "White", "Icons/WinkR.png", DialogFind(Player, "WinkRFacialExpressions"));
+	DrawButton(255, 50, 90, 90, "", "White", "Icons/WinkL.png", DialogFind(Player, "WinkLFacialExpressions"));
+	DrawButton(155, 50, 90, 90, "", "White", "Icons/WinkR.png", DialogFind(Player, "WinkRFacialExpressions"));
 	DrawButton(20, 50, 90, 90, "", "White", "Icons/Reset.png", DialogFind(Player, "ClearFacialExpressions"));
 	if (!DialogFacialExpressions || !DialogFacialExpressions.length) DialogFacialExpressionsBuild();
 	for (let I = 0; I < DialogFacialExpressions.length; I++) {
-		var FE = DialogFacialExpressions[I];
-		var OffsetY = 160 + 120 * I;
+		const FE = DialogFacialExpressions[I];
+		const OffsetY = 185 + 100 * I;
 
-		// Draw the back and forth arrow buttons
-		DrawButton(0, OffsetY, 45, 90, "", "White");
-		MainCanvas.beginPath();
-		MainCanvas.moveTo(30, OffsetY + 15);
-		MainCanvas.lineTo(15, OffsetY + 45);
-		MainCanvas.lineTo(30, OffsetY + 75);
-		MainCanvas.stroke();
-		DrawButton(455, OffsetY, 45, 90, "", "White");
-		MainCanvas.beginPath();
-		MainCanvas.moveTo(470, OffsetY + 15);
-		MainCanvas.lineTo(485, OffsetY + 45);
-		MainCanvas.lineTo(470, OffsetY + 75);
-		MainCanvas.stroke();
+		DrawButton(20, OffsetY, 90, 90, "", I == DialogFacialExpressionsSelected ? "Cyan" : "White", "Assets/Female3DCG/" + FE.Group + (FE.CurrentExpression ? "/" + FE.CurrentExpression : "") + "/Icon.png");
 
-		// Draw the selection of facial expressions at current scroll position
-		DrawButton(55, OffsetY, 90, 90, "", (FE.MenuExpression1 == FE.CurrentExpression ? "Pink" : "White"), "Assets/Female3DCG/" + FE.Appearance.Asset.Group.Name + (FE.MenuExpression1 ? "/" + FE.MenuExpression1 : "") + "/Icon.png");
-		DrawButton(155, OffsetY, 90, 90, "", (FE.MenuExpression2 == FE.CurrentExpression ? "Pink" : "White"), "Assets/Female3DCG/" + FE.Appearance.Asset.Group.Name + (FE.MenuExpression2 ? "/" + FE.MenuExpression2 : "") + "/Icon.png");
-		DrawButton(255, OffsetY, 90, 90, "", (FE.MenuExpression3 == FE.CurrentExpression ? "Pink" : "White"), "Assets/Female3DCG/" + FE.Appearance.Asset.Group.Name + (FE.MenuExpression3 ? "/" + FE.MenuExpression3 : "") + "/Icon.png");
-		DrawButton(355, OffsetY, 90, 90, "", (FE.MenuExpression4 == FE.CurrentExpression ? "Pink" : "White"), "Assets/Female3DCG/" + FE.Appearance.Asset.Group.Name + (FE.MenuExpression4 ? "/" + FE.MenuExpression4 : "") + "/Icon.png");
-
+		// Draw the table with expressions
+		if (I == DialogFacialExpressionsSelected) {
+			for (let j = 0; j < FE.ExpressionList.length; j++) {
+				const EOffsetX = 155 + 100 * (j % 3);
+				const EOffsetY = 185 + 100 * Math.floor(j / 3);
+				DrawButton(EOffsetX, EOffsetY, 90, 90, "", (FE.ExpressionList[j] == FE.CurrentExpression ? "Pink" : "White"), "Assets/Female3DCG/" + FE.Group + (FE.ExpressionList[j] ? "/" + FE.ExpressionList[j] : "") + "/Icon.png");
+			}
+		}
 	}
 }
 
@@ -1732,62 +1747,39 @@ function DialogDrawExpressionMenu() {
  * Handles clicks in the dialog expression menu.
  * @returns {void} - Nothing
  */
-function DialogClickExpressionMenu() { 
+function DialogClickExpressionMenu() {
 	if (MouseIn(20, 50, 90, 90)) {
 		DialogFacialExpressions.forEach(FE => {
-			CharacterSetFacialExpression(Player, FE.Appearance.Asset.Group.Name);
+			CharacterSetFacialExpression(Player, FE.Group);
 			FE.CurrentExpression = null;
 		});
-	} else if (MouseIn(120, 50, 90, 90)) { 
-		var EyesExpression = WardrobeGetExpression(Player);
-		var CurrentExpression = DialogFacialExpressions.find(FE => FE.Group == "Eyes").CurrentExpression;
+	} else if (MouseIn(155, 50, 90, 90)) {
+		const EyesExpression = WardrobeGetExpression(Player);
+		const CurrentExpression = DialogFacialExpressions.find(FE => FE.Group == "Eyes").CurrentExpression;
 		CharacterSetFacialExpression(Player, "Eyes1", (EyesExpression.Eyes !== "Closed") ? "Closed" : (CurrentExpression !== "Closed" ? CurrentExpression : null));
-	} else if (MouseIn(220, 50, 90, 90)) { 
-		var EyesExpression = WardrobeGetExpression(Player);
-		var CurrentExpression = DialogFacialExpressions.find(FE => FE.Group == "Eyes").CurrentExpression;
+	} else if (MouseIn(255, 50, 90, 90)) {
+		const EyesExpression = WardrobeGetExpression(Player);
+		const CurrentExpression = DialogFacialExpressions.find(FE => FE.Group == "Eyes").CurrentExpression;
 		CharacterSetFacialExpression(Player, "Eyes2", (EyesExpression.Eyes2 !== "Closed") ? "Closed" : (CurrentExpression !== "Closed" ? CurrentExpression : null));
-	} else for (let I = 0; I < DialogFacialExpressions.length; I++) {
-		var FE = DialogFacialExpressions[I];
-		if ((MouseY >= 160 + 120 * I) && (MouseY <= (160 + 120 * I) + 90)) {
+	} else {
+		// Expression category buttons
+		for (let I = 0; I < DialogFacialExpressions.length; I++) {
+			if (MouseIn(20, 185 + 100 * I, 90, 90)) {
+				DialogFacialExpressionsSelected = I;
+			}
+		}
 
-			// Left arrow button
-			if (MouseX >= 0 && MouseX <= 45) {
-				FE.MenuExpression4 = FE.MenuExpression3;
-				FE.MenuExpression3 = FE.MenuExpression2;
-				FE.MenuExpression2 = FE.MenuExpression1;
-				var ExpressionList = FE.Appearance.Asset.Group.AllowExpression;
-				var Index = ExpressionList.indexOf(FE.MenuExpression1);
-				FE.MenuExpression1 = (Index < 0) ? ExpressionList[ExpressionList.length - 1] : (Index == 0) ? null : ExpressionList[Index - 1];
+		// Expression table
+		if (DialogFacialExpressionsSelected >= 0 && DialogFacialExpressionsSelected < DialogFacialExpressions.length) {
+			const FE = DialogFacialExpressions[DialogFacialExpressionsSelected];
+			for (let j = 0; j < FE.ExpressionList.length; j++) {
+				const EOffsetX = 155 + 100 * (j % 3);
+				const EOffsetY = 185 + 100 * Math.floor(j / 3);
+				if (MouseIn(EOffsetX, EOffsetY, 90, 90)) {
+					CharacterSetFacialExpression(Player, FE.Group, FE.ExpressionList[j]);
+					FE.CurrentExpression = FE.ExpressionList[j];
+				}
 			}
-
-			// Right arrow button
-			if (MouseX >= 455 && MouseX <= 500) {
-				FE.MenuExpression1 = FE.MenuExpression2;
-				FE.MenuExpression2 = FE.MenuExpression3;
-				FE.MenuExpression3 = FE.MenuExpression4;
-				var ExpressionList = FE.Appearance.Asset.Group.AllowExpression;
-				var Index = ExpressionList.indexOf(FE.MenuExpression4);
-				FE.MenuExpression4 = (Index < 0) ? ExpressionList[0] : (Index == ExpressionList.length - 1) ? null : ExpressionList[Index + 1];
-			}
-
-			// Expression choice
-			if (MouseX >= 55 && MouseX <= 145) {
-				CharacterSetFacialExpression(Player, FE.Appearance.Asset.Group.Name, FE.MenuExpression1);
-				FE.CurrentExpression = FE.MenuExpression1;
-			}
-			if (MouseX >= 155 && MouseX <= 245) {
-				CharacterSetFacialExpression(Player, FE.Appearance.Asset.Group.Name, FE.MenuExpression2);
-				FE.CurrentExpression = FE.MenuExpression2;
-			}
-			if (MouseX >= 255 && MouseX <= 345) {
-				CharacterSetFacialExpression(Player, FE.Appearance.Asset.Group.Name, FE.MenuExpression3);
-				FE.CurrentExpression = FE.MenuExpression3;
-			}
-			if (MouseX >= 355 && MouseX <= 445) {
-				CharacterSetFacialExpression(Player, FE.Appearance.Asset.Group.Name, FE.MenuExpression4);
-				FE.CurrentExpression = FE.MenuExpression4;
-			}
-
 		}
 	}
 }

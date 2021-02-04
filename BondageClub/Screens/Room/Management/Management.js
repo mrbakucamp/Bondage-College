@@ -20,6 +20,11 @@ var ManagementVisitRoom = false;
 var ManagementTimer = 0;
 
 /**
+ * Checks if the player is helpless (maids disabled) or not.
+ * @returns {boolean} - Returns true if the player still has time remaining after asking the maids to stop helping
+ */
+function ManagementIsMaidsDisabled() { var expire = LogValue("MaidsDisabled", "Maid") - CurrentTime ; return (expire > 0 ) }
+/**
  * Checks if the player has a special title such as maid, mistress, kidnapper, etc.
  * @returns {boolean} - TRUE if the player has a special title.
  */
@@ -74,12 +79,12 @@ function ManagementOwnerAway() { return !((Player.Owner == "NPC-Sidney") || (Pla
  * Checks if the player is wearing any chastity item that can currently be removed by the mistress.
  * @returns {boolean} - TRUE if there is at least one chastity item that can be removed.
  */
-function ManagementAllowReleaseChastity() { return (Player.IsChaste() && ManagementCanReleaseChastity && (ManagementCanUnlockBra() || ManagementCanUnlockBelt() || ManagementCanUnlockButt() || ManagementCanUnlockVulva() || ManagementCanUnlockNipples()) )}
+function ManagementAllowReleaseChastity() { return (Player.IsChaste() && !ManagementIsMaidsDisabled() && ManagementCanReleaseChastity && (ManagementCanUnlockBra() || ManagementCanUnlockBelt() || ManagementCanUnlockButt() || ManagementCanUnlockVulva() || ManagementCanUnlockNipples()) )}
 /**
  * Checks if the player is chaste, but cannot be released.
  * @returns {boolean} - TRUE if the player is chaste and cannot be released.
  */
-function ManagementRefuseReleaseChastity() { return (Player.IsChaste() && !ManagementCanReleaseChastity) }
+function ManagementRefuseReleaseChastity() { return (Player.IsChaste() && (!ManagementCanReleaseChastity || ManagementIsMaidsDisabled())) }
 /**
  * Checks if the player cannot be released by the mistress.
  * @returns {boolean} - TRUE if the player cannot be released.
@@ -144,22 +149,27 @@ function ManagementCanBreakTrialOnline() { return ((Player.Owner == "") && (Play
  * Checks if the player can part ways from their online owner. (7 days wait time over)
  * @returns {boolean} - TRUE if the player can break her full collar.
  */
-function ManagementCanBeReleasedOnline() { return ((Player.Owner != "") && (Player.Ownership != null) && (Player.Ownership.Start != null) && (Player.Ownership.Start + 604800000 <= CurrentTime)) }
+function ManagementCanBeReleasedOnline() { return ((Player.Owner != "") && (Player.Ownership != null) && (Player.Ownership.Start != null) && (Player.Ownership.Start + 604800000 <= CurrentTime) && (Player.GetDifficulty() <= 2)) }
 /**
  * Checks if the player cannot part ways from their online owner. (7 days wait time not over)
  * @returns {boolean} - TRUE if the player cannot break her full collar.
  */
-function ManagementCannotBeReleasedOnline() { return ((Player.Owner != "") && (Player.Ownership != null) && (Player.Ownership.Start != null) && (Player.Ownership.Start + 604800000 > CurrentTime)) }
+function ManagementCannotBeReleasedOnline() { return ((Player.Owner != "") && (Player.Ownership != null) && (Player.Ownership.Start != null) && (Player.Ownership.Start + 604800000 > CurrentTime) && (Player.GetDifficulty() <= 2)) }
 /**
  * Checks if the player can part ways from her owner. (The NPC left the private room.)
  * @returns {boolean} - TRUE if the player can part ways with her current NPC owner.
  */
-function ManagementCanBeReleased() { return ((Player.Owner != "") && (Player.Ownership == null) && !PrivateOwnerInRoom()) }
+function ManagementCanBeReleased() { return ((Player.Owner != "") && (Player.Ownership == null) && !PrivateOwnerInRoom() && (Player.GetDifficulty() <= 2)) }
 /**
  * Checks if the player cannot part ways from her owner. (The NPC is still in the private room.)
  * @returns {boolean} - TRUE if the player cannot part ways with her current NPC owner.
  */
-function ManagementCannotBeReleased() { return ((Player.Owner != "") && (Player.Ownership == null) && PrivateOwnerInRoom()) }
+function ManagementCannotBeReleased() { return ((Player.Owner != "") && (Player.Ownership == null) && PrivateOwnerInRoom() && (Player.GetDifficulty() <= 2)) }
+/**
+ * Checks if the player cannot part ways from her owner because she's on the Extreme difficulty.
+ * @returns {boolean} - TRUE if the player cannot part ways with her current owner.
+ */
+function ManagementCannotBeReleasedExtreme() { return ((Player.Owner != "") && (Player.GetDifficulty() >= 3)) }
 /**
  * Checks if the player can be owned by the mistress.
  * @returns {boolean} - TRUE if the player is fully submissive, the player is not owned, the mistress has not been angered and the mistress can enter the private room.
