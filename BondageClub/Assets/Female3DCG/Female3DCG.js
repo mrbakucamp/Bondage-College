@@ -3707,7 +3707,7 @@ var AssetFemale3DCG = [
 			{ 
 				Name: "Crib", Category: ["ABDL"], Fetish: ["ABDL"], Priority: 1, Value: 100,
 				Difficulty: 0, SelfBondage: 1, Time: 15, RemoveTime: 10, IsRestraint: true, AllowLock: true, Left: -30, Top: -235,
-				Effect: ["Freeze"], HideItem: ["ShoesFlippers"], RemoveAtLogin: true, Prerequisite: ["AllFours", "NotSuspended", "NotHogtied", "NoFeetSpreader"], Extended: true, 
+				Effect: ["Freeze", "Leash"], HideItem: ["ShoesFlippers"], RemoveAtLogin: true, Prerequisite: ["AllFours", "NotSuspended", "NotHogtied", "NoFeetSpreader"], Extended: true, 
 				AllowType: ["g0p0", "g0p1", "g1p0", "g1p1"], SetPose: ["BaseLower"], 
 				Layer: 
 				[
