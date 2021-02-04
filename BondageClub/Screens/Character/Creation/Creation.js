@@ -89,6 +89,8 @@ function CreationResponse(data) {
 			Player.FriendList = [];
 			Player.GhostList = [];
 			Player.Lovership = [];
+			Player.FriendNames = new Map();
+			Player.SubmissivesList = new Set();
 
 			// Imports logs, inventory and Sarah status from the Bondage College
 			CreationMessage = "";
@@ -98,7 +100,7 @@ function CreationResponse(data) {
 			ImportBondageCollege(Player);
 
 			// Calls the preference init to make sure the preferences are loaded correctly
-			PreferenceInit(Player);
+			PreferenceInitPlayer();
 			ActivitySetArousal(Player, 0);
 
 			// Flush the controls and enters the main hall

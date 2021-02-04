@@ -26,7 +26,11 @@ var InventoryItemArmsFuturisticCuffsOptions = [
 		Property: {
 			Type: "Elbow",
 			Difficulty: 4,
+<<<<<<< HEAD
 			Effect: ["Block", "Prone"],
+=======
+			Effect: ["Block", "Prone", "NotSelfPickable"],
+>>>>>>> upstream/master
 			SetPose: ["BackElbowTouch"],
 			SelfUnlock: false,
 		},
@@ -36,7 +40,11 @@ var InventoryItemArmsFuturisticCuffsOptions = [
 		Property: {
 			Type: "Both",
 			Difficulty: 6,
+<<<<<<< HEAD
 			Effect: ["Block", "Prone"],
+=======
+			Effect: ["Block", "Prone", "NotSelfPickable"],
+>>>>>>> upstream/master
 			SetPose: ["BackElbowTouch"],
 			SelfUnlock: false,
 		},
@@ -49,7 +57,11 @@ var InventoryItemArmsFuturisticCuffsOptions = [
  */
 function InventoryItemArmsFuturisticCuffsLoad() {
  	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagLoadAccessDenied()
 	} else
 		ExtendedItemLoad(InventoryItemArmsFuturisticCuffsOptions, "SelectBondagePosition");
@@ -61,7 +73,11 @@ function InventoryItemArmsFuturisticCuffsLoad() {
  */
 function InventoryItemArmsFuturisticCuffsDraw() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagDrawAccessDenied()
 	} else
 		ExtendedItemDraw(InventoryItemArmsFuturisticCuffsOptions, "LeatherCuffsPose");
@@ -73,7 +89,11 @@ function InventoryItemArmsFuturisticCuffsDraw() {
  */
 function InventoryItemArmsFuturisticCuffsClick() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagClickAccessDenied()
 	} else
 		ExtendedItemClick(InventoryItemArmsFuturisticCuffsOptions);

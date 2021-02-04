@@ -34,7 +34,11 @@ var InventoryItemHeadInteractiveVisorOptions = [
 
 function InventoryItemHeadInteractiveVisorLoad() {
 	 var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagLoadAccessDenied()
 	} else
 		ExtendedItemLoad(InventoryItemHeadInteractiveVisorOptions, "SelectVisorType");
@@ -42,7 +46,11 @@ function InventoryItemHeadInteractiveVisorLoad() {
 
 function InventoryItemHeadInteractiveVisorDraw() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagDrawAccessDenied()
 	} else
 		ExtendedItemDraw(InventoryItemHeadInteractiveVisorOptions, "InteractiveVisorHeadType");
@@ -50,7 +58,11 @@ function InventoryItemHeadInteractiveVisorDraw() {
 
 function InventoryItemHeadInteractiveVisorClick() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagClickAccessDenied()
 	} else
 		ExtendedItemClick(InventoryItemHeadInteractiveVisorOptions);

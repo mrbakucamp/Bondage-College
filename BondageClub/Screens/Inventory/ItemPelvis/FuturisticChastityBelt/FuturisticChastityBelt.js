@@ -1,7 +1,10 @@
 "use strict";
 var FuturisticChastityBeltShockCooldownOrgasm = 15000 // 15 sec
+<<<<<<< HEAD
 var FuturisticChastityBeltShockCooldownTamper = 1000 // 1 sec
 var FuturisticChastityBeltShockCooldownStruggle = 30000 // 30 sec
+=======
+>>>>>>> upstream/master
 
 var InventoryItemPelvisFuturisticChastityBeltTamperZones = [
 	"ItemPelvis",
@@ -35,7 +38,11 @@ var InventoryItemPelvisFuturisticChastityBeltOptions = [
 
 function InventoryItemPelvisFuturisticChastityBeltLoad() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagLoadAccessDenied()
 	} else{
 		if (DialogFocusItem.Property == null) DialogFocusItem.Property = { NextShockTime: 0, PunishStruggle: false , PunishStruggleOther: false , PunishOrgasm: false, ChatMessage: false,  CloseBack: false, };
@@ -49,6 +56,7 @@ function InventoryItemPelvisFuturisticChastityBeltLoad() {
 
 function InventoryItemPelvisFuturisticChastityBeltDraw() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
 		InventoryItemMouthFuturisticPanelGagDrawAccessDenied()
 	} else if (DialogFocusItem && DialogFocusItem.Property) {
@@ -78,6 +86,34 @@ function InventoryItemPelvisFuturisticChastityBeltDraw() {
 		}
 		if (DialogFocusItem.Property.Type != "ClosedBack") {
 			DrawButton(1625, 910, 150, 64, DialogFind(Player, "FuturisticChastityBeltClosedBack"), "White", "");
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+		InventoryItemMouthFuturisticPanelGagDrawAccessDenied()
+	} else if (DialogFocusItem && DialogFocusItem.Property) {
+		DrawAssetPreview(1387, 125, DialogFocusItem.Asset);
+
+		/*if (DialogFocusItem.Property.NextShockTime - CurrentTime > 0)
+			DrawText(DialogFindPlayer("FuturisticChastityBeltTime") + " " + TimerToString(DialogFocusItem.Property.NextShockTime - CurrentTime), 1500, 475, "White", "Gray");
+		else
+			DrawText(DialogFindPlayer("FuturisticChastityBeltTimeReady"), 1500, 475, "White", "Gray");*/
+
+
+		MainCanvas.textAlign = "left";
+		DrawCheckboxColor(1100, 550, 64, 64, DialogFindPlayer("FuturisticChastityBeltPunishChatMessage"), DialogFocusItem.Property.ChatMessage, "White");
+		DrawCheckboxColor(1100, 620, 64, 64, DialogFindPlayer("FuturisticChastityBeltPunishStruggle"), DialogFocusItem.Property.PunishStruggle, "White");
+		DrawCheckboxColor(1100, 690, 64, 64, DialogFindPlayer("FuturisticChastityBeltPunishStruggleOther"), DialogFocusItem.Property.PunishStruggleOther, "White");
+		DrawCheckboxColor(1100, 760, 64, 64, DialogFindPlayer("FuturisticChastityBeltPunishOrgasm"), DialogFocusItem.Property.PunishOrgasm, "White");
+		MainCanvas.textAlign = "center";
+
+		if (DialogFocusItem.Property.Type != null) {
+			DrawButton(1225, 910, 150, 64, DialogFindPlayer("FuturisticChastityBeltOpenBack"), "White", "");
+		} 
+		if (DialogFocusItem.Property.Type != "OpenFront") {
+			DrawButton(1425, 910, 150, 64, DialogFindPlayer("FuturisticChastityBeltOpenFront"), "White", "");
+		}
+		if (DialogFocusItem.Property.Type != "ClosedBack") {
+			DrawButton(1625, 910, 150, 64, DialogFindPlayer("FuturisticChastityBeltClosedBack"), "White", "");
+>>>>>>> upstream/master
 		}
 
 		
@@ -87,7 +123,11 @@ function InventoryItemPelvisFuturisticChastityBeltDraw() {
 
 function InventoryItemPelvisFuturisticChastityBeltClick() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagClickAccessDenied()
 	} else {
 		if (MouseIn(1885, 25, 90, 90)) InventoryItemPelvisFuturisticChastityBeltExit()
@@ -156,6 +196,7 @@ function InventoryItemPelvisFuturisticChastityBeltNpcDialog(C, Option) { Invento
 
 function AssetsItemPelvisFuturisticChastityBeltScriptUpdatePlayer(data) {
 	var Item = data.Item
+<<<<<<< HEAD
 	if (Item.Property.NextShockTime - CurrentTime <= 0) {
 		// Punish the player if they try to mess with the groin area
 		if (Item.Property.PunishStruggle && Player.FocusGroup && DialogProgress >= 0 && DialogProgressPrevItem != null && DialogProgressStruggleCount > 0) {
@@ -185,6 +226,36 @@ function AssetsItemPelvisFuturisticChastityBeltScriptUpdatePlayer(data) {
 			DialogLeaveDueToItem = true
 
 		}
+=======
+	// Punish the player if they try to mess with the groin area
+	if (Item.Property.PunishStruggle && Player.FocusGroup && (DialogProgress >= 0 || DialogLockPickProgressCurrentTries > 0) && DialogProgressPrevItem != null && DialogProgressStruggleCount > 0) {
+		var inFocus = false
+		for (var Z = 0; Z < InventoryItemPelvisFuturisticChastityBeltTamperZones.length; Z++)
+			if (Player.FocusGroup.Name == InventoryItemPelvisFuturisticChastityBeltTamperZones[Z])
+				inFocus = true
+		
+		if (inFocus) {
+			AssetsItemPelvisFuturisticChastityBeltScriptTrigger(Player, Item, "Struggle")
+			DialogProgressStruggleCount = 0
+			DialogLeaveDueToItem = true
+			/*var vol = 1
+			if (Player.AudioSettings && Player.AudioSettings.Volume) {
+				vol = Player.AudioSettings.Volume
+			}
+			AudioPlayInstantSound("Audio/Shocks.mp3", vol)*/
+		}
+	}
+	// Punish the player if they struggle anywhere
+	if (Item.Property.PunishStruggleOther && Player.FocusGroup && DialogProgressPrevItem != null && DialogProgressStruggleCount > 0 && (DialogProgress > 50 || DialogLockPickProgressCurrentTries > 2)) {
+		AssetsItemPelvisFuturisticChastityBeltScriptTrigger(Player, Item, "StruggleOther")
+		DialogProgressStruggleCount = 0
+		DialogProgress = 0
+		DialogLeaveDueToItem = true
+
+	}
+		
+	if (Item.Property.NextShockTime - CurrentTime <= 0) {
+>>>>>>> upstream/master
 		// Punish the player if they orgasm
 		if (Item.Property.PunishOrgasm && Player.ArousalSettings && Player.ArousalSettings.OrgasmStage > 1) {
 			AssetsItemPelvisFuturisticChastityBeltScriptTrigger(Player, Item, "Orgasm")

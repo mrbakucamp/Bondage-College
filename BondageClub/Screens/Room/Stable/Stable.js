@@ -681,10 +681,10 @@ function StablePlayerExamEnd() {
 	CharacterRelease(Player);
 	CharacterNaked(Player);
 	//Release Harnes, Plug, Ears2
-	for (let E = Player.Appearance.length - 1; E >= 0; E--);
-	if ((Player.Appearance[E].Asset.Group.Name == "ItemTorso") || (Player.Appearance[E].Asset.Group.Name == "Hat") || (Player.Appearance[E].Asset.Group.Name == "ItemButt")) {
-		Player.Appearance.splice(E, 1);
-	}
+	for (let E = Player.Appearance.length - 1; E >= 0; E--)
+		if ((Player.Appearance[E].Asset.Group.Name == "ItemTorso") || (Player.Appearance[E].Asset.Group.Name == "Hat") || (Player.Appearance[E].Asset.Group.Name == "ItemButt")) {
+			Player.Appearance.splice(E, 1);
+		}
 	CharacterDress(Player, StablePlayerAppearance);
 	StablePlayerDressOff = false;
 	StablePlayerIsPony = (LogQuery("JoinedStable", "Pony") && (ReputationGet("Dominant") < -30)) && !StablePlayerDressOff;
@@ -957,7 +957,7 @@ function StableGenericProgressStart(Timer, S, S2, Item, Background, Character, S
 		StableProgress = StableProgress + StableProgressAuto;
 		if (StableProgress < 0) StableProgress = 0;
 		DrawProgressBar(1200, 700, 600, 100, StableProgress);
-		DrawText(DialogFind(Player, (CommonIsMobile) ? "ProgressClick" : "ProgressKeys"), 1500, 900, "White", "Black");
+		DrawText(DialogFindPlayer((CommonIsMobile) ? "ProgressClick" : "ProgressKeys"), 1500, 900, "White", "Black");
 		if (StableProgress >= 100) {
 			StableGenericFinished();
 		}
@@ -980,12 +980,12 @@ function StableGenericDrawProgress() {
 			DrawRect(300, 25, 225, 225, "white");
 			DrawImage(StableProgressItem, 302, 27);
 			DrawText(StableProgressOperation, 1000, 50, "White", "Black");
-			DrawText(DialogFind(Player, (CommonIsMobile) ? "ProgressClick" : "ProgressKeys"), 1000, 150, "White", "Black");
+			DrawText(DialogFindPlayer((CommonIsMobile) ? "ProgressClick" : "ProgressKeys"), 1000, 150, "White", "Black");
 			DrawRect(200, 300, 20, 675, "white");
 			DrawRect(1800, 300, 20, 675, "white");
 			DrawCharacter(Player, StableGenericPlayerPosition, 300, 0.7);
 		} else {
-			DrawText(DialogFind(Player, (CommonIsMobile) ? "ProgressClick" : "ProgressKeys"), 600, 25, "White", "Black");
+			DrawText(DialogFindPlayer((CommonIsMobile) ? "ProgressClick" : "ProgressKeys"), 600, 25, "White", "Black");
 			DrawRect(200, 200, 20, 800, "white");
 			DrawRect(1800, 200, 20, 800, "white");
 			DrawCharacter(Player, StableGenericPlayerPosition, 200, 0.4);
@@ -1038,7 +1038,7 @@ function StableGenericRun(Reverse) {
 		StableProgress = StableProgress + StableProgressClick * (Reverse ? -1 : 1) + ((100 - StableProgress) / 50);
 	if (StableProgress < 0) StableProgress = 0;
 	StableProgressStruggleCount++;
-	if ((StableProgressStruggleCount >= 50) && (StableProgressClick == 0)) StableProgressOperation = DialogFind(Player, "Impossible");
+	if ((StableProgressStruggleCount >= 50) && (StableProgressClick == 0)) StableProgressOperation = DialogFindPlayer("Impossible");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

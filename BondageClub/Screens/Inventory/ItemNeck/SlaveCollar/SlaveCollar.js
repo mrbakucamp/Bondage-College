@@ -12,11 +12,11 @@ var InventoryItemNeckSlaveCollarTypes = [
     }, {
         Name: "SteelPosture",
         Image: "SteelPostureCollar",
-        Property: { Type: "SteelPosture", Effect: [], Block: [] }
+        Property: { Type: "SteelPosture", Effect: ["FixedHead"], Block: [] }
     }, {
         Name: "LeatherPosture",
         Image: "PostureCollar",
-        Property: { Type: "LeatherPosture", Effect: [], Block: [] }
+        Property: { Type: "LeatherPosture", Effect: ["FixedHead"], Block: [] }
     },{
         Name: "PetCollar",
         Image: "PetCollar",
@@ -60,11 +60,11 @@ var InventoryItemNeckSlaveCollarTypes = [
 	},{
         Name: "StrictPostureCollar",
         Image: "StrictPostureCollar",
-        Property: { Type: "StrictPostureCollar", Effect: [], Block: [] }
+        Property: { Type: "StrictPostureCollar", Effect: ["FixedHead"], Block: [] }
 	},{
         Name: "LatexPostureCollar",
         Image: "LatexPostureCollar",
-        Property: { Type: "LatexPostureCollar", Effect: ["GagNormal"], Block: ["ItemMouth", "ItemMouth2", "ItemMouth3"] }
+        Property: { Type: "LatexPostureCollar", Effect: ["GagNormal", "FixedHead"], Block: ["ItemMouth", "ItemMouth2", "ItemMouth3"] }
 	},{
         Name: "HeartCollar",
         Image: "HeartCollar",
@@ -122,19 +122,20 @@ function InventoryItemNeckSlaveCollarDraw() {
 
             // In regular mode, the owner can select the collar model and change the offset to get the next 8 models
             ColorPickerHide();
-			DrawText(DialogFind(Player, "SlaveCollarSelectType"), 1500, 250, "white", "gray");
+			DrawText(DialogFindPlayer("SlaveCollarSelectType"), 1500, 250, "white", "gray");
 			DrawButton(1665, 25, 90, 90, "", "White", "Icons/Next.png");
 			DrawButton(1775, 25, 90, 90, "", (DialogFocusItem.Color != null && DialogFocusItem.Color != "Default" && DialogFocusItem.Color != "None") ? DialogFocusItem.Color : "White", "Icons/ColorPick.png");
 			for (let I = InventoryItemNeckSlaveCollarOffset; I < InventoryItemNeckSlaveCollarTypes.length && I < InventoryItemNeckSlaveCollarOffset + 8; I++) {
-				var Type = DialogFocusItem && DialogFocusItem.Property && DialogFocusItem.Property.Type || "";
-				DrawButton(1000 + ((I - InventoryItemNeckSlaveCollarOffset) % 4) * 250, 350 + Math.floor((I - InventoryItemNeckSlaveCollarOffset) / 4) * 300, 225, 275, "", (Type == InventoryItemNeckSlaveCollarTypes[I].Name) ? "#888888" : "White");
-				DrawImage("Assets/" + DialogFocusItem.Asset.Group.Family + "/" + DialogFocusItem.Asset.Group.Name + "/Preview/" + InventoryItemNeckSlaveCollarTypes[I].Image + ".png", 1000 + ((I - InventoryItemNeckSlaveCollarOffset) % 4) * 250, 350 + Math.floor((I - InventoryItemNeckSlaveCollarOffset) / 4) * 300);
-				DrawTextFit(AssetGet(DialogFocusItem.Asset.Group.Family, DialogFocusItem.Asset.Group.Name, InventoryItemNeckSlaveCollarTypes[I].Image).Description, 1112 + ((I - InventoryItemNeckSlaveCollarOffset) % 4) * 250, 600 + Math.floor((I - InventoryItemNeckSlaveCollarOffset) / 4) * 300, 221, 50, "white", "gray");
+				const A = DialogFocusItem.Asset;
+				const Type = InventoryItemNeckSlaveCollarTypes[I];
+				const CollarTypeAsset = AssetGet(A.Group.Family, A.Group.Name, Type.Image);
+				const CurrentType = DialogFocusItem.Property && DialogFocusItem.Property.Type || "";
+				const buttonX = 1000 + ((I - InventoryItemNeckSlaveCollarOffset) % 4) * 250;
+				const buttonY = 350 + Math.floor((I - InventoryItemNeckSlaveCollarOffset) / 4) * 300;
+				DrawPreviewBox(buttonX, buttonY, `${AssetGetPreviewPath(DialogFocusItem.Asset)}/${Type.Image}.png`, CollarTypeAsset.Description, {Hover: true, Disabled: CurrentType === Type.Name});
 			}
-
 		}
     }
-
 }
 
 // Catches the item extension clicks

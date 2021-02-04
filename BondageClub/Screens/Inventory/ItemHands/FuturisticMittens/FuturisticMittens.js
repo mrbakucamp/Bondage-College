@@ -3,18 +3,30 @@
 var InventoryItemHandsFuturisticMittensOptions = [
 	{
 		Name: "Mittens",
+<<<<<<< HEAD
 		Property: { Type: null, Difficulty: 8, Effect: ["Block", "Prone"]},
 	},
 	{
 		Name: "Gloves",
 		Property: { Type: "Gloves", Difficulty: 0, Effect: [] },
+=======
+		Property: { Type: null, Difficulty: 8, Effect: ["Block", "Prone"], SelfUnlock: false},
+	},
+	{
+		Name: "Gloves",
+		Property: { Type: "Gloves", Difficulty: 0, Effect: [], SelfUnlock: true},
+>>>>>>> upstream/master
 	},
 ];
 
 // Loads the item extension properties
 function InventoryItemHandsFuturisticMittensLoad() {
  	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagLoadAccessDenied()
 	} else
 	ExtendedItemLoad(InventoryItemHandsFuturisticMittensOptions, "SelectFuturisticMittensType");
@@ -23,7 +35,11 @@ function InventoryItemHandsFuturisticMittensLoad() {
 // Draw the item extension screen
 function InventoryItemHandsFuturisticMittensDraw() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagDrawAccessDenied()
 	} else
 		ExtendedItemDraw(InventoryItemHandsFuturisticMittensOptions, "FuturisticMittensType");
@@ -32,7 +48,11 @@ function InventoryItemHandsFuturisticMittensDraw() {
 // Catches the item extension clicks
 function InventoryItemHandsFuturisticMittensClick() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagClickAccessDenied()
 	} else
 		ExtendedItemClick(InventoryItemHandsFuturisticMittensOptions);

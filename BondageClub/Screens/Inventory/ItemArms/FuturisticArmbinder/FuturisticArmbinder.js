@@ -14,7 +14,11 @@ var InventoryItemArmsFuturisticArmbinderOptions = [
 // Loads the item extension properties
 function InventoryItemArmsFuturisticArmbinderLoad() {
  	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagLoadAccessDenied()
 	} else
 	ExtendedItemLoad(InventoryItemArmsFuturisticArmbinderOptions, "SelectFuturisticArmbinderType");
@@ -23,7 +27,11 @@ function InventoryItemArmsFuturisticArmbinderLoad() {
 // Draw the item extension screen
 function InventoryItemArmsFuturisticArmbinderDraw() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagDrawAccessDenied()
 	} else
 		ExtendedItemDraw(InventoryItemArmsFuturisticArmbinderOptions, "FuturisticArmbinderType");
@@ -32,7 +40,11 @@ function InventoryItemArmsFuturisticArmbinderDraw() {
 // Catches the item extension clicks
 function InventoryItemArmsFuturisticArmbinderClick() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagClickAccessDenied()
 	} else
 		ExtendedItemClick(InventoryItemArmsFuturisticArmbinderOptions);

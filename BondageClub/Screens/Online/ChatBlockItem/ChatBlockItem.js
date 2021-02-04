@@ -1,6 +1,10 @@
 "use strict";
 var ChatBlockItemBackground = "Sheet";
+<<<<<<< HEAD
 var ChatBlockItemList = ["ABDL", "SciFi"];
+=======
+var ChatBlockItemList = ["ABDL", "SciFi", "Leashing"];
+>>>>>>> upstream/master
 var ChatBlockItemCategory = [];
 var ChatBlockItemReturnData = {};
 

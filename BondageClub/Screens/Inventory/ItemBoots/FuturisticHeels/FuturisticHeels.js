@@ -3,17 +3,29 @@
 var InventoryItemBootsFuturisticHeelsOptions = [
 	{
 		Name: "Shoes",
+<<<<<<< HEAD
 		Property: {Type: null, Height: 6},
 	},
 	{
 		Name: "Heel",
 		Property: { Type: "Heel", Height: 16 },
+=======
+		Property: { Type: null, HeightModifier: 6 },
+	},
+	{
+		Name: "Heel",
+		Property: { Type: "Heel", HeightModifier: 16 },
+>>>>>>> upstream/master
 	},
 ]
 
 function InventoryItemBootsFuturisticHeelsLoad() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagLoadAccessDenied()
 	} else
 		ExtendedItemLoad(InventoryItemBootsFuturisticHeelsOptions, "FuturisticHeelsType");
@@ -21,7 +33,11 @@ function InventoryItemBootsFuturisticHeelsLoad() {
 
 function InventoryItemBootsFuturisticHeelsDraw() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagDrawAccessDenied()
 	} else
 		ExtendedItemDraw(InventoryItemBootsFuturisticHeelsOptions, "FuturisticHeelsType");
@@ -30,6 +46,7 @@ function InventoryItemBootsFuturisticHeelsDraw() {
 
 function InventoryItemBootsFuturisticHeelsClick() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
 		InventoryItemMouthFuturisticPanelGagClickAccessDenied()
 	} else {
@@ -51,6 +68,12 @@ function InventoryItemBootsFuturisticHeelsClick() {
 			}
 			
 		}
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+		InventoryItemMouthFuturisticPanelGagClickAccessDenied()
+	} else {
+		ExtendedItemClick(InventoryItemBootsFuturisticHeelsOptions);
+>>>>>>> upstream/master
 	}
 }
 

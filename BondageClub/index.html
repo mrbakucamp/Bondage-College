@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html style="width:100%; height:100%; padding:0px; margin:0px;">
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
@@ -12,6 +12,8 @@
 	<title>Bondage Club</title>
 	<link rel="icon" type="image/png" href="Icons/Logo.png">
 	<link rel="stylesheet" href="CSS/Styles.css">
+	<link rel="stylesheet" href="CSS/chessboard-0.3.0.css">
+	<link rel="stylesheet" href="CSS/Chess.css">
 </head>
 
 <script src="Backgrounds/Backgrounds.js"></script>
@@ -22,7 +24,6 @@
 <script src="Scripts/Animation.js"></script>
 <script src="Scripts/Mouse.js"></script>
 <script src="Scripts/Drawing.js"></script>
-<script src="Scripts/Drawing3D.js"></script>
 <script src="Scripts/Timer.js"></script>
 <script src="Scripts/AfkTimer.js"></script>
 <script src="Scripts/GameLog.js"></script>
@@ -31,6 +32,7 @@
 <script src="Scripts/Character.js"></script>
 <script src="Scripts/CharacterName.js"></script>
 <script src="Scripts/ColorPicker.js"></script>
+<script src="Scripts/ControllerSupport.js"></script>
 <script src="Scripts/Dialog.js"></script>
 <script src="Scripts/Speech.js"></script>
 <script src="Scripts/Text.js"></script>
@@ -49,9 +51,7 @@
 <script src="Scripts/LZString.js"></script>
 <script src="Scripts/VibratorMode.js"></script>
 <script src="Scripts/socket.io/socket.io.js"></script>
-<script src="Scripts/three/three.min.js"></script>
-<script src="Scripts/three/inflate.min.js"></script>
-<script src="Scripts/three/FBXLoader.js"></script>
+<script src="Scripts/DynamicDraw.js"></script>
 <script src="Assets/Female3DCG/Female3DCG.js"></script>
 <script src="Screens/Character/Login/Login.js"></script>
 <script src="Screens/Character/Appearance/Appearance.js"></script>
@@ -89,6 +89,7 @@
 <script src="Screens/Room/CollegeTheater/CollegeTheater.js"></script>
 <script src="Screens/Room/CollegeDetention/CollegeDetention.js"></script>
 <script src="Screens/Room/CollegeTeacher/CollegeTeacher.js"></script>
+<script src="Screens/Room/CollegeChess/CollegeChess.js"></script>
 <script src="Screens/Room/LARP/LARP.js"></script>
 <script src="Screens/Room/MovieStudio/MovieStudio.js"></script>
 <script src="Screens/Room/Gambling/Gambling.js"></script>
@@ -109,6 +110,11 @@
 <script src="Screens/MiniGame/Tennis/Tennis.js"></script>
 <script src="Screens/MiniGame/PuppyWalker/PuppyWalker.js"></script>
 <script src="Screens/MiniGame/DojoStruggle/DojoStruggle.js"></script>
+<script src="Screens/MiniGame/Chess/jquery-3.2.1.min.js"></script>
+<script src="Screens/MiniGame/Chess/chess.min.js"></script>
+<script src="Screens/MiniGame/Chess/chessboard-0.3.0.js"></script>
+<script src="Screens/MiniGame/Chess/chess.js"></script>
+<script src="Screens/MiniGame/Chess/BondageChess.js"></script>
 <script src="Screens/Cutscene/PlayerCollaring/PlayerCollaring.js"></script>
 <script src="Screens/Cutscene/PlayerMistress/PlayerMistress.js"></script>
 <script src="Screens/Cutscene/NPCCollaring/NPCCollaring.js"></script>
@@ -135,6 +141,10 @@
 <script src="Screens/Inventory/ItemNeck/AutoShockCollar/AutoShockCollar.js"></script>
 <script src="Screens/Inventory/ItemNeckAccessories/CollarShockUnit/CollarShockUnit.js"></script>
 <script src="Screens/Inventory/ItemNeckAccessories/CollarAutoShockUnit/CollarAutoShockUnit.js"></script>
+<<<<<<< HEAD
+=======
+<script src="Screens/Inventory/ItemArms/CeilingShackles/CeilingShackles.js"></script>
+>>>>>>> upstream/master
 <script src="Screens/Inventory/ItemArms/HempRope/HempRope.js"></script>
 <script src="Screens/Inventory/ItemArms/LeatherCuffs/LeatherCuffs.js"></script>
 <script src="Screens/Inventory/ItemArms/StraitJacket/StraitJacket.js"></script>
@@ -154,7 +164,13 @@
 <script src="Screens/Inventory/ItemMisc/IntricatePadlock/IntricatePadlock.js"></script>
 <script src="Screens/Inventory/ItemMisc/TimerPadlock/TimerPadlock.js"></script>
 <script src="Screens/Inventory/ItemMisc/CombinationPadlock/CombinationPadlock.js"></script>
+<<<<<<< HEAD
 <script src="Screens/Inventory/ItemMisc/PasswordPadlock/PasswordPadlock.js"></script>
+=======
+<script src="Screens/Inventory/ItemMisc/HighSecurityPadlock/HighSecurityPadlock.js"></script>
+<script src="Screens/Inventory/ItemMisc/PasswordPadlock/PasswordPadlock.js"></script>
+<script src="Screens/Inventory/ItemMisc/TimerPasswordPadlock/TimerPasswordPadlock.js"></script>
+>>>>>>> upstream/master
 <script src="Screens/Inventory/ItemMisc/MistressTimerPadlock/MistressTimerPadlock.js"></script>
 <script src="Screens/Inventory/ItemMisc/OwnerTimerPadlock/OwnerTimerPadlock.js"></script>
 <script src="Screens/Inventory/ItemMisc/OwnerPadlock/OwnerPadlock.js"></script>
@@ -170,10 +186,19 @@
 <script src="Screens/Inventory/ItemMouth/PlugGag/PlugGag.js"></script>
 <script src="Screens/Inventory/ItemMouth/FuturisticPanelGag/FuturisticPanelGag.js"></script>
 <script src="Screens/Inventory/ItemMouth/FuturisticHarnessPanelGag/FuturisticHarnessPanelGag.js"></script>
+<<<<<<< HEAD
+=======
+<script src="Screens/Inventory/ItemMouth/FuturisticHarnessBallGag/FuturisticHarnessBallGag.js"></script>
+>>>>>>> upstream/master
 <script src="Screens/Inventory/ItemArms/FuturisticCuffs/FuturisticCuffs.js"></script>
 <script src="Screens/Inventory/ItemLegs/FuturisticLegCuffs/FuturisticLegCuffs.js"></script>
 <script src="Screens/Inventory/ItemFeet/FuturisticAnkleCuffs/FuturisticAnkleCuffs.js"></script>
 <script src="Screens/Inventory/ItemNeck/FuturisticCollar/FuturisticCollar.js"></script>
+<<<<<<< HEAD
+=======
+<script src="Screens/Inventory/ItemTorso/FuturisticHarness/FuturisticHarness.js"></script>
+<script src="Screens/Inventory/ItemTorso/FuturisticHarness2/FuturisticHarness2.js"></script>
+>>>>>>> upstream/master
 <script src="Screens/Inventory/ItemMouth/DildoPlugGag/DildoPlugGag.js"></script>
 <script src="Screens/Inventory/ItemHands/SpankingToys/SpankingToy.js"></script>
 <script src="Screens/Inventory/ItemTorso/HempRopeHarness/HempRopeHarness.js"></script>
@@ -213,6 +238,11 @@
 <script src="Screens/Inventory/ItemDevices/CryoCapsule/CryoCapsule.js"></script>
 <script src="Screens/Inventory/ItemArms/LeatherStraitJacket/LeatherStraitJacket.js"></script>
 <script src="Screens/Inventory/ItemArms/FuturisticArmbinder/FuturisticArmbinder.js"></script>
+<<<<<<< HEAD
+=======
+<script src="Screens/Inventory/ItemAddon/CeilingChain/CeilingChain.js"></script>
+<script src="Screens/Inventory/ItemAddon/CeilingRope/CeilingRope.js"></script>
+>>>>>>> upstream/master
 <script src="Screens/Inventory/ItemHands/FuturisticMittens/FuturisticMittens.js"></script>
 <script src="Screens/Inventory/ItemArms/CollarCuffs/CollarCuffs.js"></script>
 <script src="Screens/Inventory/ItemDevices/InflatableBodyBag/InflatableBodyBag.js"></script>
@@ -237,11 +267,13 @@
 <script src="Screens/Inventory/ItemFeet/OrnateAnkleCuffs/OrnateAnkleCuffs.js"></script>
 <script src="Screens/Inventory/ItemArms/FullLatexSuit/FullLatexSuit.js"></script>
 <script src="Screens/Inventory/ItemVulva/FullLatexSuitWand/FullLatexSuitWand.js"></script>
+<script src="Screens/Inventory/ItemVulva/FuturisticVibrator/FuturisticVibrator.js"></script>
 <script src="Screens/Inventory/ItemArms/LeatherArmbinder/LeatherArmbinder.js"></script>
 <script src="Screens/Inventory/ItemArms/BitchSuit/BitchSuit.js"></script>
 <script src="Screens/Inventory/ItemArms/TightJacketCrotch/TightJacketCrotch.js"></script>
 <script src="Screens/Inventory/ItemArms/InflatableStraightLeotard/InflatableStraightLeotard.js"></script>
 <script src="Screens/Inventory/ItemDevices/Locker/Locker.js"></script>
+<script src="Screens/Inventory/ItemDevices/PetBowl/PetBowl.js"></script>
 <script src="Screens/Inventory/ItemDevices/SmallLocker/SmallLocker.js"></script>
 <script src="Screens/Inventory/ItemDevices/VentlessLocker/VentlessLocker.js"></script>
 <script src="Screens/Inventory/ItemDevices/SmallVentlessLocker/SmallVentlessLocker.js"></script>
@@ -250,7 +282,13 @@
 <script src="Screens/Inventory/ItemPelvis/MetalChastityBelt/MetalChastityBelt.js"></script>
 <script src="Screens/Inventory/ItemPelvis/PolishedChastityBelt/PolishedChastityBelt.js"></script>
 <script src="Screens/Inventory/ItemPelvis/FuturisticChastityBelt/FuturisticChastityBelt.js"></script>
+<<<<<<< HEAD
 <script src="Screens/Inventory/ItemBreast/FuturisticBra/FuturisticBra.js"></script>
+=======
+<script src="Screens/Inventory/ItemPelvis/FuturisticChastityBelt2/FuturisticChastityBelt2.js"></script>
+<script src="Screens/Inventory/ItemBreast/FuturisticBra/FuturisticBra.js"></script>
+<script src="Screens/Inventory/ItemBreast/FuturisticBra2/FuturisticBra2.js"></script>
+>>>>>>> upstream/master
 <script src="Screens/Inventory/ItemPelvis/OrnateChastityBelt/OrnateChastityBelt.js"></script>
 <script src="Screens/Inventory/ItemPelvis/StuddedChastityBelt/StuddedChastityBelt.js"></script>
 <script src="Screens/Inventory/ItemPelvis/HempRope/HempRope.js"></script>
@@ -261,6 +299,15 @@
 <script src="Screens/Inventory/ItemButt/ShockPlug/ShockPlug.js"></script>
 <script src="Screens/Inventory/ItemVulva/ShockDildo/ShockDildo.js"></script>
 <script src="Screens/Inventory/ItemNipples/ShockClamps/ShockClamps.js"></script>
+<script src="Screens/Inventory/ItemMouth/BallGag/BallGag.js"></script>
+<script src="Screens/Inventory/ItemMouth2/BallGag/BallGag.js"></script>
+<script src="Screens/Inventory/ItemMouth3/BallGag/BallGag.js"></script>
+<script src="Screens/Inventory/ItemMouth/HarnessBallGag/HarnessBallGag.js"></script>
+<script src="Screens/Inventory/ItemMouth2/HarnessBallGag/HarnessBallGag.js"></script>
+<script src="Screens/Inventory/ItemMouth3/HarnessBallGag/HarnessBallGag.js"></script>
+<script src="Screens/Inventory/ItemMouth/WiffleGag/WiffleGag.js"></script>
+<script src="Screens/Inventory/ItemMouth2/WiffleGag/WiffleGag.js"></script>
+<script src="Screens/Inventory/ItemMouth3/WiffleGag/WiffleGag.js"></script>
 <script src="Screens/Inventory/ItemMouth/CupholderGag/CupholderGag.js"></script>
 <script src="Screens/Inventory/ItemMouth2/CupholderGag/CupholderGag.js"></script>
 <script src="Screens/Inventory/ItemMouth3/CupholderGag/CupholderGag.js"></script>
@@ -272,7 +319,11 @@
 <script src="Screens/Inventory/ItemArms/LatexSleevelessLeotard/LatexSleevelessLeotard.js"></script>
 <script src="Screens/Inventory/ItemArms/PrisonLockdownSuit/PrisonLockdownSuit.js"></script>
 <script src="Screens/Inventory/ItemArms/HighSecurityStraitJacket/HighSecurityStraitJacket.js"></script>
+<<<<<<< HEAD
 <script src="Screens/Inventory/Bra/LatexCorset1/LatexCorset1.js"></script>
+=======
+<script src="Screens/Inventory/Corset/LatexCorset1/LatexCorset1.js"></script>
+>>>>>>> upstream/master
 <script src="Screens/Inventory/Necklace/NecklaceKey/NecklaceKey.js"></script>
 <script src="Screens/Inventory/Necklace/NecklaceLock/NecklaceLock.js"></script>
 <script src="Screens/Inventory/ItemNeckAccessories/CustomCollarTag.js/CustomCollarTag.js"></script>
@@ -280,6 +331,17 @@
 <script src="Screens/Inventory/ItemMisc/WoodenSign/WoodenSign.js"></script>
 <script src="Screens/Inventory/ItemHood/GwenHood/GwenHood.js"></script>
 <script src="Screens/Inventory/ItemTorso/HeavyLatexCorset/HeavyLatexCorset.js"></script>
+<<<<<<< HEAD
+=======
+<script src="Screens/Inventory/ItemMouth/FunnelGag/FunnelGag.js"></script>
+<script src="Screens/Inventory/ItemEars/Headphones/Headphones.js"></script>
+<script src="Screens/Inventory/ItemEars/FuturisticEarphones/FuturisticEarphones.js"></script>
+<script src="Screens/Inventory/ItemHood/CanvasHood/CanvasHood.js"></script>
+<script src="Screens/Inventory/ItemDevices/Vacbed/Vacbed.js"></script>
+<script src="Screens/Inventory/ItemDevices/WoodenBox/WoodenBox.js"></script>
+<script src="Screens/Inventory/HairAccessory3/Halo/Halo.js"></script>
+<script src="Screens/Inventory/HairAccessory1/Halo/Halo.js"></script>
+>>>>>>> upstream/master
 <script>
 
 /*
@@ -322,11 +384,15 @@
 
 // When the code is loaded, we start the game engine
 window.onload = function() {
+<<<<<<< HEAD
 	//CheatImport();
 <<<<<<< HEAD
 	//ServerURL = "https://bondage-club-server.azurewebsites.net/";
 	//ServerURL = "https://bondage-club-server.herokuapp.com/";
 =======
+=======
+	CheatImport();
+>>>>>>> upstream/master
 	ServerURL = "https://bondage-club-server.herokuapp.com/";
 >>>>>>> upstream/master
 	CommonIsMobile = CommonDetectMobile();
@@ -334,6 +400,7 @@ window.onload = function() {
 	DrawLoad();
 	AssetLoadAll();
 	CommonSetScreen("Character", "Login");
+	ControllerActive = false;
 	ServerInit();
 	MainRun(0);
 };
@@ -361,6 +428,8 @@ function DocumentKeyDown(event) {
 				DialogLeaveItemMenu();
 		} else if ((CurrentCharacter != null) && (CurrentScreen == "ChatRoom")) {
 			DialogLeave();
+		} else if ((CurrentCharacter == null) && (CurrentScreen == "ChatRoom") && (document.getElementById("TextAreaChatLog") != null)) {
+			ElementScrollToEnd("TextAreaChatLog");
 		}
 	}
 }
@@ -408,6 +477,49 @@ function LoseFocus(event) {
 	}
 }
  
+</script>
+
+
+
+<div id="axes" style="display: flex; flex-direction: column;"></div>
+<script>
+    if (ControllerActive == true) {
+        window.addEventListener('gamepadconnected', (event) => {
+            const update = () => {
+                const output = document.getElementById('axes');
+                output.innerHTML = '';
+
+                for (const gamepad of navigator.getGamepads()) {
+                    if (!gamepad) continue;
+                    for (const [index, axis] of gamepad.axes.entries()) {
+                        ControllerAxis(gamepad.axes);
+                    }
+                }
+                requestAnimationFrame(update);
+            };
+            update();
+        });
+    }
+</script>
+<div id="buttons" style="display: flex; flex-direction: column;"></div>
+<script>
+    if (ControllerActive == true) {
+        window.addEventListener('gamepadconnected', (event) => {
+            const update = () => {
+                const output = document.getElementById('buttons');
+                output.innerHTML = '';
+
+                for (const gamepad of navigator.getGamepads()) {
+                    if (!gamepad) continue;
+                    for (const [index, button] of gamepad.buttons.entries()) {
+                        ControllerButton(gamepad.buttons);
+                    }
+                }
+                requestAnimationFrame(update);
+            };
+            update();
+        });
+    }
 </script>
 
 <body style="width:100%; height:100%; background-color:black; margin:0px; padding:0px; overflow:hidden;">

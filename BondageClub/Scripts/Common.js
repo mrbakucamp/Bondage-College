@@ -9,10 +9,34 @@ var CurrentOnlinePlayers = 0;
 var CommonIsMobile = false;
 var CommonCSVCache = {};
 var CutsceneStage = 0;
+var Notifications = {};
+var CommonPhotoMode = false;
+
+/**
+ * A map of keys to common font stack definitions. Each stack definition is a	
+ * two-item array whose first item is an ordered list of fonts, and whose	
+ * second item is the generic fallback font family (e.g. sans-serif, serif,
+ * etc.)
+ * @constant
+ * @type {Object.<String, [String[], String]>}
+ */
+const CommonFontStacks = {
+	Arial: [["Arial"], "sans-serif"],
+	TimesNewRoman: [["Times New Roman", "Times"], "serif"],
+	Papyrus: [["Papyrus", "Ink Free", "Segoe Script", "Gabriola"], "fantasy"],
+	ComicSans: [["Comic Sans MS", "Comic Sans", "Brush Script MT", "Segoe Print"], "cursive"],
+	Impact: [["Impact", "Arial Black", "Franklin Gothic", "Arial"], "sans-serif"],
+	HelveticaNeue: [["Helvetica Neue", "Helvetica", "Arial"], "sans-serif"],
+	Verdana: [["Verdana", "Helvetica Neue", "Arial"], "sans-serif"],
+	CenturyGothic: [["Century Gothic", "Apple Gothic", "AppleGothic", "Futura"], "sans-serif"],
+	Georgia: [["Georgia", "Times"], "serif"],
+	CourierNew: [["Courier New", "Courier"], "monospace"],
+	Copperplate: [["Copperplate", "Copperplate Gothic Light"], "fantasy"],
+};
 
 /**
  * Checks if a variable is a number
- * @param {*} n - Variable to check for 
+ * @param {*} n - Variable to check for
  * @returns {boolean} - Returns TRUE if the variable is a finite number
  */
 function CommonIsNumeric(n) {
@@ -150,16 +174,42 @@ function CommonReadCSV(Array, Path, Screen, File) {
 }
 
 /**
- * AJAX utility to get a file and return its content
+ * AJAX utility to get a file and return its content. By default will retry requests 10 times
  * @param {string} Path - Path of the resource to request
  * @param {function} Callback - Callback to execute once the resource is received
+ * @param {number} [RetriesLeft] - How many more times to retry if the request fails - after this hits zero, an error will be logged
  * @returns {void} - Nothing
  */
-function CommonGet(Path, Callback) {
+function CommonGet(Path, Callback, RetriesLeft) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", Path);
-	xhr.onreadystatechange = function () { if (this.readyState == 4) Callback.bind(this)(xhr); };
+	xhr.onloadend = function() {
+		// For non-error responses, call the callback
+		if (this.status < 400) Callback.bind(this)(xhr);
+		// Otherwise, retry
+		else CommonGetRetry(Path, Callback, RetriesLeft);
+	};
+	xhr.onerror = function() { CommonGetRetry(Path, Callback, RetriesLeft); };
 	xhr.send(null);
+}
+
+/**
+ * Retry handler for CommonGet requests. Exponentially backs off retry attempts up to a limit of 1 minute. By default,
+ * retries up to a maximum of 10 times.
+ * @param {string} Path - The path of the resource to request
+ * @param {function} Callback - Callback to execute once the resource is received
+ * @param {number} [RetriesLeft] - How many more times to retry - after this hits zero, an error will be logged
+ * @returns {void} - Nothing
+ */
+function CommonGetRetry(Path, Callback, RetriesLeft) {
+	if (typeof RetriesLeft !== "number") RetriesLeft = 10;
+	if (RetriesLeft <= 0) {
+		console.error(`GET request to ${Path} failed - no more retries`);
+	} else {
+		const retrySeconds = Math.min(Math.pow(2, Math.max(0, 10 - RetriesLeft)), 60);
+		console.warn(`GET request to ${Path} failed - retrying in ${retrySeconds} second${retrySeconds === 1 ? "" : "s"}...`);
+		setTimeout(() => CommonGet(Path, Callback, RetriesLeft - 1), retrySeconds * 1000);
+	}
 }
 
 /**
@@ -181,9 +231,16 @@ function CommonKeyDown() {
 	if (CurrentCharacter == null) {
 		if (typeof window[CurrentScreen + "KeyDown"] === "function")
 			CommonDynamicFunction(CurrentScreen + "KeyDown()");
+		if (ControllerActive == true) {
+			ControllerSupportKeyDown();
+		}
 	}
-	else
+	else {
 		DialogKeyDown();
+		if (ControllerActive == true) {
+			ControllerSupportKeyDown();
+		}
+	}
 }
 
 /**
@@ -253,6 +310,7 @@ function CommonDynamicFunctionParams(FunctionName) {
  *  function will not log to console if the provided function name does not exist as a global function.
  * @param {string} FunctionName - The name of the global function to call
  * @param {...*} [args] - zero or more arguments to be passed to the function (optional)
+ * @returns {any} - returns the result of the function call, or undefined if the function name isn't valid
  */
 function CommonCallFunctionByName(FunctionName/*, ...args */) {
 	var Function = window[FunctionName];
@@ -263,17 +321,41 @@ function CommonCallFunctionByName(FunctionName/*, ...args */) {
 }
 
 /**
+ * Behaves exactly like CommonCallFunctionByName, but logs a warning if the function name is invalid.
+ * @param {string} FunctionName - The name of the global function to call
+ * @param {...*} [args] - zero or more arguments to be passed to the function (optional)
+ * @returns {any} - returns the result of the function call, or undefined if the function name isn't valid
+ */
+function CommonCallFunctionByNameWarn(FunctionName/*, ...args */) {
+	var Function = window[FunctionName];
+	if (typeof Function === "function") {
+		var args = Array.prototype.slice.call(arguments, 1);
+		return Function.apply(null, args);
+	} else {
+		console.warn(`Attempted to call invalid function "${FunctionName}"`);
+	}
+}
+
+/**
  * Sets the current screen and calls the loading script if needed
  * @param {string} NewModule - Module of the screen to display
  * @param {string} NewScreen - Screen to display
  * @returns {void} - Nothing
  */
 function CommonSetScreen(NewModule, NewScreen) {
+	var prevScreen = CurrentScreen
 	CurrentModule = NewModule;
 	CurrentScreen = NewScreen;
+	CommonGetFont.clearCache();
+	CommonGetFontName.clearCache();
 	TextLoad();
 	if (typeof window[CurrentScreen + "Load"] === "function")
 		CommonDynamicFunction(CurrentScreen + "Load()");
+	if (prevScreen == "ChatSearch" || prevScreen == "ChatCreate")
+		ChatRoomStimulationMessage("Walk")
+	if (ControllerActive == true) {
+		ClearButtons();
+	}
 }
 
 /**
@@ -286,13 +368,26 @@ function CommonTime() {
 
 /**
  * Checks if a given value is a valid HEX color code
- * @param {string} Value - Potential HEX color code 
- * @returns {boolean} - Returns TRUE if the string is a valid HEX color 
+ * @param {string} Value - Potential HEX color code
+ * @returns {boolean} - Returns TRUE if the string is a valid HEX color
  */
 function CommonIsColor(Value) {
 	if ((Value == null) || (Value.length < 3)) return false;
 	if (/^#[0-9A-F]{3}$/i.test(Value)) Value = "#" + Value[1] + Value[1] + Value[2] + Value[2] + Value[3] + Value[3];	//convert short hand hex color to standard format
 	return /^#[0-9A-F]{6}$/i.test(Value);
+}
+
+/**
+ * Checks whether an item's color has a valid value that can be interpreted by the drawing
+ * functions. Valid values are null, undefined, strings, and an array containing any of the
+ * aforementioned types.
+ * @param {*} Color - The Color value to check
+ * @returns {boolean} - Returns TRUE if the color is a valid item color
+ */
+function CommonColorIsValid(Color) {
+	if (Color == null || typeof Color === "string") return true;
+	if (Array.isArray(Color)) return Color.every(C => C == null || typeof C === "string");
+	return false;
 }
 
 /**
@@ -311,7 +406,7 @@ function CommonRandomItemFromList(ItemPrevious, ItemList) {
 /**
  * Converts a string of numbers split by commas to an array, sanitizes the array by removing all NaN or undefined elements.
  * @param {string} s - String of numbers split by commas
- * @returns {number[]} - Array of valid numbers from the given string 
+ * @returns {number[]} - Array of valid numbers from the given string
  */
 function CommonConvertStringToArray(s) {
 	var arr = [];
@@ -395,4 +490,135 @@ function CommonDebounce(func, wait) {
 		}
 		return result;
 	};
+}
+/**
+ * Creates a simple memoizer. 
+ * The memoized function does calculate its result exactly once and from that point on, uses
+ * the result stored in a local cache to speed up things.
+ * @param {function} func - The function to memoize
+ * @returns {any} - The result of the memoized function
+ */
+function CommonMemoize(func) {
+	var memo = {};
+
+	var memoized = function () {
+		var index = [];
+		for (var i = 0; i < arguments.length; i++) {
+			if (typeof arguments[i] === "object") {
+				index.push(JSON.stringify(arguments[i]));
+			} else {
+				index.push(String(arguments[i]));
+			}
+		} // for
+		if (!(index in memo)) {
+			memo[index] = func.apply(this, arguments);
+		}
+		return memo[index];
+	}; // function
+
+	// add a clear cache method
+	memoized.clearCache = function () {
+		memo = {};
+	}
+	return memoized;
+} // CommonMemoize
+
+/**
+ * Memoized getter function. Returns a font string specifying the player's
+ * preferred font and the provided size. This is memoized as it is called on
+ * every frame in many cases.
+ * @function
+ * @param {Number} size - The font size that should be specified in the
+ * returned font string
+ * @returns {String} - A font string specifying the requested font size and
+ * the player's preferred font stack. For example:
+ * 12px "Courier New", "Courier", monospace
+ */
+const CommonGetFont = CommonMemoize((size) => {
+	return `${size}px ${CommonGetFontName()}`;
+});
+
+/**
+ * Memoized getter function. Returns a font string specifying the player's
+ * preferred font stack. This is memoized as it is called on every frame in
+ * many cases.
+ * @function
+ * @returns {String} - A font string specifying the player's preferred font
+ * stack. For example:
+ * "Courier New", "Courier", monospace
+ */
+const CommonGetFontName = CommonMemoize(() => {
+	const pref = Player && Player.GraphicsSettings && Player.GraphicsSettings.Font;
+	const fontStack = CommonFontStacks[pref] || CommonFontStacks.Arial;
+	const font = fontStack[0].map(fontName => `"${fontName}"`).join(", ");
+	return `${font}, ${fontStack[1]}`;
+});
+
+/**
+ * Increase the reported number of a notifications by one and updates the header
+ * @param {string} Type - The type of notification
+ * @returns {void}
+ */
+function CommonNotificationIncrement(Type) {
+	Notifications[Type] = (Notifications[Type] || 0) + 1;
+	CommonNotificationUpdate();
+}
+
+/**
+ * Sets the number of notifications for a type back to zero and updates the header
+ * @param {any} Type - The type of notification
+ * @returns {void}
+ */
+function CommonNotificationReset(Type) {
+	if (Notifications[Type] != null && Notifications[Type] != 0) {
+		Notifications[Type] = 0;
+		CommonNotificationUpdate();
+	}
+}
+
+/**
+ * Sets the number of notifications to zero
+ * @returns {void}
+ */
+function CommonNotificationResetAll() {
+	Notifications = {};
+	CommonNotificationUpdate();
+}
+
+/**
+ * Sets or clears notifications in the tab header
+ * @returns {void} - Nothing
+ */
+function CommonNotificationUpdate() {
+	let total = 0;
+	for (let key in Notifications) total += Notifications[key];
+	let prefix = total == 0 ? "" : "(" + total.toString() + ") ";
+	document.title = prefix + "Bondage Club";
+}
+
+function CommonTakePhoto(Left, Top, Width, Height) {
+	CommonPhotoMode = true;
+
+	// Ensure everything is redrawn once in photo-mode
+	DrawProcess();
+
+	// Capture screen as image URL
+	let ImgData = document.getElementById("MainCanvas").getContext('2d').getImageData(Left, Top, Width, Height);
+	let PhotoCanvas = document.createElement('canvas');
+	PhotoCanvas.width = Width;
+	PhotoCanvas.height = Height;
+	PhotoCanvas.getContext('2d').putImageData(ImgData, 0, 0);
+	let PhotoImg = PhotoCanvas.toDataURL("image/png");
+
+	// Open the image in a new window
+	if (CommonGetBrowser().Name === "Chrome") {
+		// Chrome does not allow loading data URLs in the top frame
+		let newWindow = window.open('about:blank', '_blank');
+		newWindow.document.write("<img src='" + PhotoImg + "' alt='from canvas'/>");
+	}
+	else {
+		window.open(PhotoImg);
+	}
+	
+	CommonPhotoMode = false;
 }

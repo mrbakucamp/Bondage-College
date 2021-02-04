@@ -3,6 +3,13 @@ Straps,Straps
 Upper,Upper
 Lower,Lower
 Cage,Cage
+<<<<<<< HEAD
 CribPillowTrim, Pillow Trim
 ItemDevicesPillowMain, Pillow
 Paci, Paci
+=======
+BottomStrap,Bottom Strap
+TopStrap,Top Strap
+Egg,Vibe Eggs
+Tape,Tape Strips
+>>>>>>> upstream/master

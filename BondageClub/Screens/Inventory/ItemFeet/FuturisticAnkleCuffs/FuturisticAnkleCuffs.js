@@ -3,13 +3,21 @@ var InventoryItemFeetFuturisticAnkleCuffsOptions = [
 	{
 		Name: "None",
 		Property: {
+<<<<<<< HEAD
 			Type: null, SetPose: null, Difficulty: null, Effect: null
+=======
+			Type: null, SetPose: null, Difficulty: null, Effect: null, FreezeActivePose: [],
+>>>>>>> upstream/master
 		}
 	},
 	{
 		Name: "Closed",
 		Property: {
+<<<<<<< HEAD
 			Type: "Closed", Effect: ["Prone", "Freeze"], SetPose: ["LegsClosed"], Difficulty: 6
+=======
+			Type: "Closed", Effect: ["Prone", "Freeze"], SetPose: ["LegsClosed"], Difficulty: 6, FreezeActivePose: ["BodyLower"]
+>>>>>>> upstream/master
 		}
 	}
 ];
@@ -17,7 +25,11 @@ var InventoryItemFeetFuturisticAnkleCuffsOptions = [
 // Loads the item extension properties
 function InventoryItemFeetFuturisticAnkleCuffsLoad() {
  	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagLoadAccessDenied()
 	} else
 		ExtendedItemLoad(InventoryItemFeetFuturisticAnkleCuffsOptions, "SelectBondagePosition");
@@ -26,7 +38,11 @@ function InventoryItemFeetFuturisticAnkleCuffsLoad() {
 // Draw the item extension screen
 function InventoryItemFeetFuturisticAnkleCuffsDraw() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagDrawAccessDenied()
 	} else
 		ExtendedItemDraw(InventoryItemFeetFuturisticAnkleCuffsOptions, "LeatherAnkleCuffsPose");
@@ -35,7 +51,11 @@ function InventoryItemFeetFuturisticAnkleCuffsDraw() {
 // Catches the item extension clicks
 function InventoryItemFeetFuturisticAnkleCuffsClick() {
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagClickAccessDenied()
 	} else
 		ExtendedItemClick(InventoryItemFeetFuturisticAnkleCuffsOptions);
@@ -60,4 +80,8 @@ function InventoryItemFeetFuturisticAnkleCuffsPublishAction(C, Option) {
 
 function InventoryItemFeetFuturisticAnkleCuffsNpcDialog(C, Option) {
 	C.CurrentDialog = DialogFind(C, "LeatherAnkleCuffs" + Option.Name, "ItemFeet");
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> upstream/master

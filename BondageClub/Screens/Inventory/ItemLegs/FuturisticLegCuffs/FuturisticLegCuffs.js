@@ -3,7 +3,11 @@
 // Loads the item extension properties
 function InventoryItemLegsFuturisticLegCuffsLoad() {
  	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagLoadAccessDenied()
 	} else
 		if (DialogFocusItem.Property == null) DialogFocusItem.Property = { Restrain: null };
@@ -11,6 +15,7 @@ function InventoryItemLegsFuturisticLegCuffsLoad() {
 
 // Draw the item extension screen
 function InventoryItemLegsFuturisticLegCuffsDraw() {
+<<<<<<< HEAD
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
 		InventoryItemMouthFuturisticPanelGagDrawAccessDenied()
@@ -30,6 +35,25 @@ function InventoryItemLegsFuturisticLegCuffsDraw() {
 		DrawButton(1500, 550, 225, 225, "", ((DialogFocusItem.Property.Restrain != null) && (DialogFocusItem.Property.Restrain == "Closed")) ? "#888888" : "Closed");
 		DrawImage("Screens/Inventory/" + DialogFocusItem.Asset.Group.Name + "/" + DialogFocusItem.Asset.Name + "/Closed.png", 1500, 550);
 		DrawText(DialogFind(Player, "LeatherLegCuffsPoseClosed"), 1610, 800, "white", "gray");
+=======
+	var C = CharacterGetCurrent();
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+		InventoryItemMouthFuturisticPanelGagDrawAccessDenied()
+	} else {
+		const A = DialogFocusItem.Asset;
+		const Property = DialogFocusItem.Property;
+		const InventoryPath = AssetGetInventoryPath(A);
+
+		// Draw the header and item
+		DrawAssetPreview(1387, 125, A);
+
+		// Draw the possible poses
+		DrawText(DialogFindPlayer("SelectBondagePosition"), 1500, 500, "white", "gray");
+		DrawPreviewBox(1250, 550, `${InventoryPath}/None.png`, "", {Hover: true, Disabled: Property.Restrain == null});
+		DrawText(DialogFindPlayer("LeatherLegCuffsPoseNone"), 1365, 800, "white", "gray");
+		DrawPreviewBox(1500, 550, `${InventoryPath}/Closed.png`, "", {Hover: true, Disabled: Property.Restrain === "Closed"});
+		DrawText(DialogFindPlayer("LeatherLegCuffsPoseClosed"), 1610, 800, "white", "gray");
+>>>>>>> upstream/master
 	}
 }
 
@@ -37,7 +61,11 @@ function InventoryItemLegsFuturisticLegCuffsDraw() {
 function InventoryItemLegsFuturisticLegCuffsClick() {
 	
 	var C = (Player.FocusGroup != null) ? Player : CurrentCharacter;
+<<<<<<< HEAD
 	if (!InventoryItemMouthFuturisticPanelGagValidate(C)) {
+=======
+	if (InventoryItemMouthFuturisticPanelGagValidate(C) !== "") {
+>>>>>>> upstream/master
 		InventoryItemMouthFuturisticPanelGagClickAccessDenied()
 	} else {
 		if ((MouseX >= 1885) && (MouseX <= 1975) && (MouseY >= 25) && (MouseY <= 110)) InventoryItemLegsFuturisticLegCuffsExit()
@@ -70,10 +98,18 @@ function InventoryItemLegsFuturisticLegCuffsSetPose(NewPose) {
 		delete DialogFocusItem.Property.SetPose;
 		delete DialogFocusItem.Property.Effect;
 		delete DialogFocusItem.Property.Difficulty;
+<<<<<<< HEAD
+=======
+		delete DialogFocusItem.Property.FreezeActivePose;
+>>>>>>> upstream/master
 	} else if (NewPose == "Closed") {
 		DialogFocusItem.Property.SetPose = ["LegsClosed"];
 		DialogFocusItem.Property.Effect = ["Prone", "KneelFreeze"];
 		DialogFocusItem.Property.Difficulty = 6;
+<<<<<<< HEAD
+=======
+		DialogFocusItem.Property.FreezeActivePose = ["BodyLower"];
+>>>>>>> upstream/master
 	}
 
 	// Adds the lock effect back if it was padlocked
@@ -96,4 +132,8 @@ function InventoryItemLegsFuturisticLegCuffsSetPose(NewPose) {
 		DialogMenuButtonBuild(C);
 	}
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> upstream/master

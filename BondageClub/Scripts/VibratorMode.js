@@ -174,6 +174,7 @@ function VibratorModeDraw(Options) {
  * @returns {void} - Nothing
  */
 function VibratorModeDrawHeader() {
+<<<<<<< HEAD
 	var Asset = DialogFocusItem.Asset;
 	var AssetPath = "Assets/" + Asset.Group.Family + "/" + Asset.Group.Name + "/Preview/" + Asset.Name + ".png";
 
@@ -186,6 +187,11 @@ function VibratorModeDrawHeader() {
 	DrawRect(1387, 100, 225, 275, "white");
 	DrawImageResize(AssetPath, X, Y, 221, 221);
 	DrawTextFit(Asset.Description, 1500, 350, 221, "black");
+=======
+	const Asset = DialogFocusItem.Asset;
+	const Vibrating = DialogFocusItem.Property && DialogFocusItem.Property.Intensity != null && DialogFocusItem.Property.Intensity >= 0;
+	DrawAssetPreview(1387, 100, Asset, { Vibrating });
+>>>>>>> upstream/master
 }
 
 /**
@@ -199,7 +205,11 @@ function VibratorModeDrawControls(Options, Y) {
 	Options = Options || [VibratorModeSet.STANDARD];
 	var Property = DialogFocusItem.Property;
 	if (Property == null) return;
+<<<<<<< HEAD
 	var ItemIntensity = DialogFind(Player, "Intensity" + Property.Intensity.toString()).replace("Item", DialogFocusItem.Asset.Description);
+=======
+	var ItemIntensity = DialogFindPlayer("Intensity" + Property.Intensity.toString()).replace("Item", DialogFocusItem.Asset.Description);
+>>>>>>> upstream/master
 	DrawText(ItemIntensity, 1500, Y, "white", "gray");
 
 	Options.forEach((OptionName) => {
@@ -208,7 +218,7 @@ function VibratorModeDrawControls(Options, Y) {
 			var X = 1175 + (I % 3) * 225;
 			if (I % 3 === 0) Y += 75;
 			var Color = Property.Mode === Option.Property.Mode ? "#888" : "White";
-			DrawButton(X, Y, 200, 55, DialogFind(Player, Option.Name), Color);
+			DrawButton(X, Y, 200, 55, DialogFindPlayer(Option.Name), Color);
 		});
 		Y += 40;
 	});
@@ -242,6 +252,33 @@ function VibratorModeClick(Options, Y) {
 }
 
 /**
+ * Gets a vibrator mode from VibratorModeOptions
+ * @param {VibratorMode} ModeName - The name of the mode from VibratorMode, e.g. VibratorMode.OFF
+ * @returns {ExtendedItemOption} - The option gotten
+ */
+function VibratorModeGetOption(ModeName) {
+	var result = null;
+	
+	[VibratorModeSet.STANDARD, VibratorModeSet.ADVANCED].some((OptionName) => {
+		var OptionGroup = VibratorModeOptions[OptionName];
+		var Handled = OptionGroup.some((Option, I) => {
+			if ((Option.Property != null) && (Option.Property.Mode == ModeName)) {
+				result = Option
+				return true
+			}
+			return false;
+		});
+		return Handled;
+	});
+	
+	if (result) return result	
+	return VibratorModeOptions.Standard[0]
+	
+}
+
+
+
+/**
  * Sets a new mode for a vibrating item and publishes a corresponding chatroom message
  * @param {ExtendedItemOption} Option - The extended item option defining the new mode to be set
  * @returns {void} - Nothing
@@ -270,6 +307,8 @@ function VibratorModeSetMode(Option) {
 
 	ChatRoomPublishCustomAction(Message, false, Dictionary);
 }
+
+
 
 /**
  * Helper function to set dynamic properties on an item
@@ -570,6 +609,7 @@ function VibratorModePublish(C, Item, OldIntensity, Intensity) {
 	if (Item.Property.ItemMemberNumber) Dictionary.push({ Tag: "ItemMemberNumber", MemberNumber: Item.Property.ItemMemberNumber });
 	if (CurrentScreen == "ChatRoom") {
 		ServerSend("ChatRoomChat", { Content: "Vibe" + Direction + "To" + Intensity, Type: "Action", Dictionary });
+		CharacterLoadEffect(C);
 		ChatRoomCharacterItemUpdate(C, Item.Asset.Group.Name);
 		ActivityChatRoomArousalSync(C);
 	}

@@ -10,6 +10,11 @@ VisibilityPreferences,- Item Preferences -
 VFXPreferences,- Graphical Preferences -
 OnlinePreferences,- Online Preferences -
 ImmersionPreferences,- Immersion Preferences -
+<<<<<<< HEAD
+=======
+ControllerPreferences,- Controller Preferences -
+NotificationsPreferences,- Notification Preferences -
+>>>>>>> upstream/master
 HomepageGeneral,General
 HomepageDifficulty,Difficulty
 HomepageRestriction,Restriction
@@ -21,6 +26,11 @@ HomepageVisibility,Item Visibility
 HomepageOnline,Online
 HomepageImmersion,Immersion
 HomepageGraphics,Graphics
+<<<<<<< HEAD
+=======
+HomepageController,Controller
+HomepageNotifications,Notifications
+>>>>>>> upstream/master
 DifficultyTitle,The difficulty mode enforces BDSM restrictions in multi-player only.  Click for details.
 DifficultyLevel0,Roleplay
 Difficulty0Text0,Roleplay - This mode is fully open to customise your experience.
@@ -46,7 +56,11 @@ Difficulty3Text1,"No rescue maid will come, and no NPC will help you out."
 Difficulty3Text2,No safeword can be used and you cannot leave your owner.
 Difficulty3Text3,"All immersion settings are maxed, and you cannot block any item."
 Difficulty3Text4,You cannot select this if you've changed mode in the last seven days.
+<<<<<<< HEAD
 DifficultySummary0A,Easy mode - Restrictions and game mechanisms 
+=======
+DifficultySummary0A,Easy mode - Restrictions and game mechanisms
+>>>>>>> upstream/master
 DifficultySummary0B,can be ignored with toggles.  For pure roleplayers.
 DifficultySummary1A,"Normal mode - Basic restrictions are enforced, "
 DifficultySummary1B,many options to protect you.  For most players.
@@ -74,6 +88,8 @@ ErrorInvalidColor,Put a valid hex #red-green-blue color
 ColorTheme,Color theme:
 Light,Light
 Dark,Dark
+Light2, Light 2,
+Dark2,Dark 2,
 EnterLeaveStyle,Enter/Leave message style:
 Normal,Normal
 Smaller,Smaller
@@ -100,8 +116,17 @@ AudioPlayBeeps,Audio alarm for beeps
 AudioPlayItem,Play item sounds in chatrooms
 AudioPlayItemPlayerOnly,Only play item sounds if you're involved
 ImmersionLockSetting,Lock this menu while bound
+<<<<<<< HEAD
 ImmersionLocked,All immersion settings are maxed out under the Extreme difficulty mode
 BlockGaggedOOC,Prevent OOC & whispers while gagged
+=======
+ReturnToChatRoom,Return to chatrooms on relog
+ReturnToChatRoomAdmin,Auto-remake rooms
+SenseDepMessages,Hide others' messages
+ImmersionLocked,All immersion settings are maxed out under the Extreme difficulty mode
+BlockGaggedOOC,Prevent OOC & whispers while gagged
+StimulationEvents,Events while plugged or vibed
+>>>>>>> upstream/master
 SensDepSetting,Sensory deprivation setting
 SensDepLight,Light
 SensDepNames,Hide names
@@ -109,10 +134,18 @@ SensDepTotal,Total
 SensDepExtreme,Total (no whispers)
 AllowPlayerLeashing,"Players can drag you to rooms when leashed"
 DisableAutoMaid,Maids come automatically when restrained
+<<<<<<< HEAD
 OfflineLockedRestrained,Cannot enter single-player rooms when restrained
 GeneralHardcoreWarning,Safewords and help from NPCs are disabled on Hardcore or Extreme
 BlindDisableExamine,Disable examining people when blind
 DisableAutoRemoveLogin,Keep all of your restraints when relogging
+=======
+DisablePickingLocksOnSelf,Locks on you can't be picked
+BlindDisableExamine,Disable examining when blind
+DisableAutoRemoveLogin,Keep all restraints when relogging
+OfflineLockedRestrained,Cannot enter single-player rooms when restrained
+GeneralHardcoreWarning,Safewords and help from NPCs are disabled on Hardcore or Extreme
+>>>>>>> upstream/master
 ForceFullHeight,Display all characters at maximum height
 EnableAfkTimer,Show AFK bubble if idle for 5 minutes
 EnableSafeword,Allow Safeword use (Cannot enable while bound)
@@ -202,6 +235,7 @@ ArousalZoneItemMouth,Mouth & Lips
 ArousalZoneItemHead,Head & Hair
 ArousalZoneItemNose,Nose
 ArousalZoneItemEars,Ears
+ArousalZoneItemHood,Head
 ArousalStutter,Speech stuttering:
 ArousalStutterNone,Never stutter
 ArousalStutterArousal,When you're aroused
@@ -217,3 +251,38 @@ VisibilityResetDescription,This will reset all items to be visible. Click again 
 VisibilityLocked,All items are forced visible under the Extreme difficulty mode
 LeaveSave,Accept changes
 LeaveNoSave,Cancel changes
+GraphicsFont,Game Font
+GraphicsFontDisclaimer,Fallback fonts will be used if your chosen font is unsupported on your device.
+Arial,Arial
+TimesNewRoman,Times New Roman
+Papyrus,Papyrus
+ComicSans,Comic Sans
+Impact,Impact
+Verdana,Verdana
+HelveticaNeue,Helvetica Neue
+CenturyGothic,Century Gothic
+Georgia,Georgia
+CourierNew,Courier New
+Copperplate,Copperplate
+GraphicsInvertRoom,Flip the room vertically when upside-down
+GraphicsStimulationFlash,Screen filters when stimulated by events
+Sensitivity,Sensitivity
+ControllerActive,Controller Active
+MapButtons,Map Buttons
+MapSticks,Map Sticks
+MoveLeftStickUp,move left stick up
+MoveLeftStickRight,move left stick right
+PressA,Press A
+PressB,Press B
+PressX,Press X
+PressY,Press Y
+PressUpOnDpad,Press Up on Dpad
+PressDownOnDpad,Press Down on Dpad
+PressLeftOnDpad,Press Left on Dpad
+PressRightOnDpad,Press Right on Dpad
+DeadZone,Dead Zone
+NotificationsChatRooms,Raise notifications for:
+NotificationsBeeps,Missed beeps
+NotificationsChat,Unread messages in chat rooms
+NotificationsChatActions,Include item and arousal activity messages
+NotificationsReset,Reset Notifications
